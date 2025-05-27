@@ -1,0 +1,7 @@
+{
+  "": ["Header", "Home","Header", "Home","Header", "Home","Header", "Home","Header", "Home","Header", "Home","Header", "Home","Header", "Home","Header", "Home","Header", "Home","Header", "Home","Header", "Home","Header", "Home","Header", "Home","Header", "Home","Header", "Home","Header", "Home","Header", "Home"],
+  "blog": ["Header"],
+  "products": ["Header", "ProductList"],
+  "products/product1/detail": ["Header"],
+  "cart": ["Header", "Cart"]
+} 
