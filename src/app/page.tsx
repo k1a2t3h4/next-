@@ -1,89 +1,83 @@
+// src/app/page.tsx
 import { GetObjectCommand } from '@aws-sdk/client-s3';
 import { r2Client } from '@/lib/r2';
 import dynamic from 'next/dynamic';
-import fs from 'fs';
-import path from 'path';
+import * as esbuild from 'esbuild';
+import React from 'react';
 
-async function getComponentFromR2(key: string) {
-  try {
-    const command = new GetObjectCommand({
-      Bucket: process.env.R2_BUCKET_NAME!,
-      Key: key,
-    });
+// Load a .tsx file from R2 and compile it using esbuild
+async function getComponentFromR2(key: string): Promise<string> {
+  const command = new GetObjectCommand({
+    Bucket: process.env.R2_BUCKET_NAME!,
+    Key: key,
+  });
 
-    const response = await r2Client.send(command);
-    const componentCode = await response.Body?.transformToString();
-    
-    if (!componentCode) {
-      throw new Error('Component code not found');
-    }
+  const response = await r2Client.send(command);
+  const componentCode = await response.Body?.transformToString();
 
-    // Create tmp directory if it doesn't exist
-    const tmpDir = path.join(process.cwd(), 'src', 'tmp');
-    if (!fs.existsSync(tmpDir)) {
-      fs.mkdirSync(tmpDir, { recursive: true });
-    }
+  if (!componentCode) throw new Error('Component code not found');
 
-    // Create the temporary file with the component code
-    const tempFile = path.join(tmpDir, key);
-    fs.writeFileSync(tempFile, componentCode);
+  const compiled = await esbuild.transform(componentCode, {
+    loader: 'tsx',
+    format: 'cjs',
+    target: 'es2020',
+  });
 
-    return tempFile;
-  } catch (error) {
-    console.error('Error loading component from R2:', error);
-    throw error;
-  }
+  return compiled.code;
 }
 
+// Evaluate compiled JS and return the default React component
+function evaluateComponent(code: string): React.ComponentType {
+  const module = { exports: {} as { default: React.ComponentType } };
+
+  const requireShim = (mod: string) => {
+    if (mod === 'react') return require('react');
+    if (mod === 'next/link') return require('next/link');
+    throw new Error(`Cannot resolve module: ${mod}`);
+  };
+
+  const func = new Function('require', 'exports', 'module', code);
+  func(requireShim, module.exports, module);
+
+  return module.exports.default;
+}
+
+// Get the page list from R2
 async function getPagesFromR2() {
-  try {
-    const command = new GetObjectCommand({
-      Bucket: process.env.R2_BUCKET_NAME!,
-      Key: 'pages.json',
-    });
+  const command = new GetObjectCommand({
+    Bucket: process.env.R2_BUCKET_NAME!,
+    Key: 'pages.json',
+  });
 
-    const response = await r2Client.send(command);
-    const pagesData = await response.Body?.transformToString();
-    
-    if (!pagesData) {
-      throw new Error('Pages data not found');
-    }
+  const response = await r2Client.send(command);
+  const pagesData = await response.Body?.transformToString();
 
-    return JSON.parse(pagesData);
-  } catch (error) {
-    console.error('Error loading pages from R2:', error);
-    throw error;
-  }
+  if (!pagesData) throw new Error('Pages data not found');
+
+  return JSON.parse(pagesData);
 }
 
-// Create a wrapper component for dynamic imports
-const DynamicComponent = dynamic(
+// SSR-safe dynamic wrapper for rendering components
+const DynamicWrapper = dynamic(
   () => Promise.resolve(({ Component }: { Component: React.ComponentType }) => <Component />),
   { ssr: false }
 );
 
 export default async function Home() {
   try {
-    // Get pages data from R2
-    const data = await getPagesFromR2();
-    const componentList = data[''] || ['Header', 'Home'];
+    const pagesData = await getPagesFromR2();
+    const componentList = pagesData[''] || ['Header', 'Home'];
 
-    // Load components from R2
     const components = await Promise.all(
       componentList.map(async (name: string) => {
         try {
           const key = `${name}.tsx`;
-          const tempFile = await getComponentFromR2(key);
-          
-          // Dynamically import the component
-          const Component = (await import(tempFile)).default;
-          
-          return {
-            name,
-            Component,
-          };
-        } catch (error) {
-          console.error(`Error loading component ${name}:`, error);
+          const compiledCode = await getComponentFromR2(key);
+          const Component = evaluateComponent(compiledCode);
+
+          return { name, Component };
+        } catch (err) {
+          console.error(`Failed to load component ${name}:`, err);
           return {
             name,
             Component: () => <div>Error loading {name}</div>,
@@ -96,16 +90,15 @@ export default async function Home() {
       <main className="min-h-screen p-4">
         {components.map(({ name, Component }, idx) => (
           <section key={idx} className="mb-4">
-            <DynamicComponent Component={Component} />
+            <DynamicWrapper Component={Component} />
           </section>
         ))}
       </main>
     );
   } catch (error) {
-    console.error('Error in Home page:', error);
-    return <div>Error loading components</div>;
+    console.error('Error loading page:', error);
+    return <div>Failed to load components</div>;
   }
 }
 
-// Add revalidation for the home page
 export const revalidate = 30;

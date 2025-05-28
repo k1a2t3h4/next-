@@ -1,6 +1,9 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  /* config options here */
+  webpack: (config, { isServer }) => {
+    config.externals = [...(config.externals || []), 'esbuild'];
+    return config;
+  },
 };
 
 module.exports = nextConfig;
