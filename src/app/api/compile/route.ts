@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic';
+
 import { GetObjectCommand } from '@aws-sdk/client-s3';
 import { r2Client } from '@/lib/r2';
 import * as esbuild from 'esbuild';
