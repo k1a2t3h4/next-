@@ -15,6 +15,7 @@ export const r2Client = new S3Client({
     accessKeyId: R2_ACCESS_KEY_ID!,
     secretAccessKey: R2_SECRET_ACCESS_KEY!,
   },
+  forcePathStyle: true,
 });
 
 export async function getPresignedUploadUrl(bucket: string, key: string) {
