@@ -5,6 +5,8 @@ import { CartProvider } from './CartWrapper';
 import { AuthProvider } from './AuthWrapper';
 import { FilterProvider} from './FilterWrapper'
 import { DynamicStateProvider} from './DynamicStateWrapper'
+import { Suspense } from 'react';
+
 const inter = Inter({
   subsets: ['latin'],
   variable: '--font-inter',
@@ -19,13 +21,15 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={`${inter.variable} antialiased`} suppressHydrationWarning>
-        <DynamicStateProvider>
-          <AuthProvider>
+        <Suspense fallback={<div>Loading...</div>}>
+          <DynamicStateProvider>
+            <AuthProvider>
               <CartProvider>
                 <FilterProvider>{children}</FilterProvider>
               </CartProvider>
-          </AuthProvider>
-        </DynamicStateProvider>
+            </AuthProvider>
+          </DynamicStateProvider>
+        </Suspense>
       </body>
     </html>
   );

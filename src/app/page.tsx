@@ -3,7 +3,7 @@ import { GetObjectCommand } from '@aws-sdk/client-s3';
 import { r2Client } from '@/lib/r2';
 import dynamic from 'next/dynamic';
 import * as esbuild from 'esbuild';
-import React from 'react';
+import React, { Suspense } from 'react';
 import ClientComponent from '../context/ClientComponent';
 
 // Validate environment variables
@@ -298,13 +298,15 @@ export default async function Home() {
     ];
     
     return (
-      <main className="min-h-screen p-4">
-        {await Promise.all(pagesData.map((section, idx) => renderSection(section, idx.toString())))}
-      </main>
+      <Suspense fallback={<div>Loading...</div>}>
+        <div className="container mx-auto">
+          {pagesData.map((section, idx) => renderSection(section, idx.toString()))}
+        </div>
+      </Suspense>
     );
   } catch (error) {
-    console.error('Error loading page:', error);
-    return <div>Failed to load components</div>;
+    console.error('Error rendering page:', error);
+    return <div>Error loading page</div>;
   }
 }
 

@@ -1,6 +1,6 @@
 'use client';
 
-import React, { createContext, useContext } from 'react';
+import React, { createContext, useContext, Suspense } from 'react';
 import { useRouter, usePathname, useSearchParams } from 'next/navigation';
 export interface Product {
     id: string;
@@ -279,9 +279,11 @@ export const FilterProvider = ({ children }: { children: React.ReactNode }) => {
   })();
 
   return (
-    <FilterContext.Provider value={contextValue}>
-      {children}
-    </FilterContext.Provider>
+    <Suspense fallback={<div>Loading...</div>}>
+      <FilterContext.Provider value={contextValue}>
+        {children}
+      </FilterContext.Provider>
+    </Suspense>
   );
 };
 
