@@ -2,13 +2,28 @@
 
 import React, { useEffect, useState } from 'react';
 
-type Props = {
+interface Section {
+  sectionName: string;
+  data: Record<string, any>;
+  Section?: Section[];
+}
+
+interface Props {
   name: string;
-};
+  data?: Record<string, any>;
+  sections?: Section[];
+  index?: string;
+  nestindex?: string;
+  renderedChildren?: JSX.Element[];
+}
 
-type DynamicComponent = React.FC;
+type DynamicComponent = React.FC<{
+  data?: Record<string, any>;
+  sections?: Section[];
+  index?:string;
+}>;
 
-export default function ClientComponent({ name }: Props) {
+export default function ClientComponent({ name, data, sections,index}: Props) {
   const [Component, setComponent] = useState<DynamicComponent | null>(null);
 
   useEffect(() => {
@@ -21,16 +36,17 @@ export default function ClientComponent({ name }: Props) {
       func(
         (modName: string) => {
           if (modName === 'react') return require('react');
-          if (modName === '../app/CartWrapper') {
-            return require('../app/CartWrapper'); // Allow it to load properly
-          }
+          if (modName === '../app/CartWrapper') return require('../app/CartWrapper');
+          if (modName === '../app/AuthWrapper') return require('../app/AuthWrapper');
+          if (modName === '../app/FilterWrapper') return require('../app/FilterWrapper');
+          if (modName === '../app/DynamicStateWrapper') return require('../app/DynamicStateWrapper');
+          if (modName === 'next/navigation') return require('next/navigation');
           return {};
         },
         mod,
         mod.exports
       );
       
-
       setComponent(() => mod.exports.default);
     }
 
@@ -39,5 +55,5 @@ export default function ClientComponent({ name }: Props) {
 
   if (!Component) return <div>Loading component...</div>;
 
-  return <Component />;
+  return <Component data={data} sections={sections} index={index} />;
 }

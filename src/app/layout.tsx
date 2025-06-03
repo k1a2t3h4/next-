@@ -2,8 +2,9 @@ import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import './globals.css';
 import { CartProvider } from './CartWrapper';
-
-
+import { AuthProvider } from './AuthWrapper';
+import { FilterProvider} from './FilterWrapper'
+import { DynamicStateProvider} from './DynamicStateWrapper'
 const inter = Inter({
   subsets: ['latin'],
   variable: '--font-inter',
@@ -18,9 +19,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={`${inter.variable} antialiased`} suppressHydrationWarning>
-        <CartProvider>
-          {children}
-        </CartProvider>
+        <DynamicStateProvider>
+          <AuthProvider>
+              <CartProvider>
+                <FilterProvider>{children}</FilterProvider>
+              </CartProvider>
+          </AuthProvider>
+        </DynamicStateProvider>
       </body>
     </html>
   );
