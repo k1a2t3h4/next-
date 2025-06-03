@@ -3,8 +3,8 @@
 import { useState, useEffect } from 'react';
 
 export default function CreateComponent() {
-  const [componentName, setComponentName] = useState('');
-  const [componentCode, setComponentCode] = useState('');
+  const [name, setComponentName] = useState('');
+  const [code, setComponentCode] = useState('');
   const [status, setStatus] = useState('');
   const [isMounted, setIsMounted] = useState(false);
 
@@ -24,33 +24,14 @@ export default function CreateComponent() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          fileName: `${componentName}.tsx`,
-          componentCode,
+          name,
+          code
         }),
       });
 
       if (!response.ok) {
         const errorData = await response.json();
         throw new Error(errorData.error || `HTTP error! status: ${response.status}`);
-      }
-
-      const { key } = await response.json();
-
-      // Update the pages.json to include the new component
-      const updateResponse = await fetch('/api/update-pages', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          componentName,
-          key,
-        }),
-      });
-
-      if (!updateResponse.ok) {
-        const errorData = await updateResponse.json();
-        throw new Error(errorData.error || `Update failed! status: ${updateResponse.status}`);
       }
 
       setStatus('Component created successfully!');
@@ -77,7 +58,7 @@ export default function CreateComponent() {
           <input
             type="text"
             id="componentName"
-            value={componentName}
+            value={name}
             onChange={(e) => setComponentName(e.target.value)}
             className="w-full p-2 border rounded"
             placeholder="e.g., Header"
@@ -90,7 +71,7 @@ export default function CreateComponent() {
           </label>
           <textarea
             id="componentCode"
-            value={componentCode}
+            value={code}
             onChange={(e) => setComponentCode(e.target.value)}
             className="w-full p-2 border rounded h-64 font-mono"
             placeholder="export default function Component() { ... }"

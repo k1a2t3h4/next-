@@ -2,32 +2,35 @@ import { S3Client } from '@aws-sdk/client-s3';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import { PutObjectCommand, GetObjectCommand } from '@aws-sdk/client-s3';
 
-// Initialize the S3 client with R2 credentials
+const {
+  CLOUDFLARE_ACCOUNT_ID,
+  R2_ACCESS_KEY_ID,
+  R2_SECRET_ACCESS_KEY,
+} = process.env;
+
 export const r2Client = new S3Client({
   region: 'auto',
-  endpoint: `https://${process.env.CLOUDFLARE_ACCOUNT_ID}.r2.cloudflarestorage.com`,
+  endpoint: `https://${CLOUDFLARE_ACCOUNT_ID}.r2.cloudflarestorage.com`,
   credentials: {
-    accessKeyId: process.env.R2_ACCESS_KEY_ID!,
-    secretAccessKey: process.env.R2_SECRET_ACCESS_KEY!,
+    accessKeyId: R2_ACCESS_KEY_ID!,
+    secretAccessKey: R2_SECRET_ACCESS_KEY!,
   },
 });
 
-// Helper function to generate a presigned URL for uploading
-export async function getPresignedUploadUrl(key: string) {
+export async function getPresignedUploadUrl(bucket: string, key: string) {
   const command = new PutObjectCommand({
-    Bucket: process.env.R2_BUCKET_NAME,
+    Bucket: bucket,
     Key: key,
   });
 
   return await getSignedUrl(r2Client, command, { expiresIn: 3600 });
 }
 
-// Helper function to generate a presigned URL for downloading
-export async function getPresignedDownloadUrl(key: string) {
+export async function getPresignedDownloadUrl(bucket: string, key: string) {
   const command = new GetObjectCommand({
-    Bucket: process.env.R2_BUCKET_NAME,
+    Bucket: bucket,
     Key: key,
   });
 
   return await getSignedUrl(r2Client, command, { expiresIn: 3600 });
-} 
+}

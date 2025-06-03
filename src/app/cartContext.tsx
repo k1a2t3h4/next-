@@ -1,6 +1,6 @@
 'use client';
 
-import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import React, { createContext, useContext, useState, useEffect } from 'react';
 
 export interface Product {
   id: string;
@@ -37,7 +37,7 @@ interface CartContextType {
 
 export const CartContext = createContext<CartContextType | undefined>(undefined);
 
-export const CartProvider = ({ children }: { children: ReactNode }) => {
+export const CartProvider = ({ children }: { children: React.ReactNode }) => {
   const [items, setItems] = useState<CartItem[]>([]);
   const [checkoutItems, setCheckoutItems] = useState<CartItem[]>([]);
 
@@ -52,16 +52,16 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
     localStorage.setItem('cart', JSON.stringify(items));
   }, [items]);
 
-  const addToCart = (product: Product, quantity: number = 1) => {
+  const addToCart = (product: Product, quantity: any) => {
     setItems(prevItems => {
       const existingItem = prevItems.find(item => item.product.id === product.id);
-
+      
       if (existingItem) {
         const newQuantity = existingItem.quantity + quantity;
         if (newQuantity > product.inventory) {
           return prevItems;
         }
-
+        
         return prevItems.map(item =>
           item.product.id === product.id
             ? { ...item, quantity: newQuantity }
@@ -119,7 +119,7 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const getCartTotal = () => {
-    return items.reduce((sum, item) => sum + item.product.price * item.quantity, 0);
+    return items.reduce((sum, item) => sum + (item.product.price * item.quantity), 0);
   };
 
   const isInCart = (productId: string) => {
@@ -156,4 +156,4 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
       {children}
     </CartContext.Provider>
   );
-};
+}; 

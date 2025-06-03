@@ -4,12 +4,12 @@ import { r2Client } from '@/lib/r2';
 import dynamic from 'next/dynamic';
 import * as esbuild from 'esbuild';
 import React from 'react';
-import ClientComponent from '../context/ClientComponent';
+import RemoteClientComponent from '../context/RemoteClientComponent';
 
 // Load a .tsx file from R2 and return the raw code (not compiled)
 async function getRawComponentFromR2(key: string): Promise<string> {
   const command = new GetObjectCommand({
-    Bucket: process.env.R2_BUCKET_NAME_TSX!,
+    Bucket: process.env.R2_BUCKET_NAME!,
     Key: key,
   });
 
@@ -41,6 +41,7 @@ async function compileComponent(code: string): Promise<string> {
 // Evaluate compiled JS and return the default React component
 function evaluateComponent(code: string, isClient: boolean): React.ComponentType {
   const module = { exports: {} as { default: React.ComponentType } };
+
   // Conditionally import hooks only if client component
   const requireShim = (mod: string) => {
     if (mod === 'react') {
@@ -85,16 +86,11 @@ async function getPagesFromR2() {
 
 export default async function Home() {
   try {
-    // const pagesData = await getPagesFromR2();
-    const pagesData={
-      "": ["Header","AddToCartButton","CartItemCount"]
-    } 
+    const pagesData = await getPagesFromR2();
     const componentList = pagesData[''] || ['Header', 'Home'];
 
-    return (
-      <main className="min-h-screen p-4">
-        {await Promise.all(
-      componentList.map(async (name: string, idx: number) => {
+    const components = await Promise.all(
+      componentList.map(async (name: string) => {
         try {
           const key = `${name}.tsx`;
 
@@ -103,30 +99,41 @@ export default async function Home() {
 
           // Step 2: Detect client component
           const client = isClientComponent(rawCode);
-          if(client)
-          {
-            return (<div key={idx}><ClientComponent name={name}/></div>)
-          } else {
-            // Step 3: Compile the raw code to JS
-            const compiledCode = await compileComponent(rawCode);
-            
-            // Step 4: Evaluate the compiled code with proper require shim
-            const Component = evaluateComponent(compiledCode, client)
 
-            // Step 5: Create dynamic wrapper with SSR option depending on client/server
-            const DynamicComponent = dynamic(
-              () => Promise.resolve(({ Component }: { Component: React.ComponentType }) => <Component />),
-              { ssr: true } // Disable SSR if client component
-            );
-            return (<div key={idx}><DynamicComponent Component={Component} /></div>)
-          }
-          
+          // Step 3: Compile the raw code to JS
+          const compiledCode = await compileComponent(rawCode);
+
+          // Step 4: Evaluate the compiled code with proper require shim
+          const Component = evaluateComponent(compiledCode, client);
+
+          // Step 5: Create dynamic wrapper with SSR option depending on client/server
+          const DynamicWrapper = dynamic(
+            () => Promise.resolve(({ Component }: { Component: React.ComponentType }) => <Component />),
+            { ssr: !client } // Disable SSR if client component
+          );
+
+          return { client,name, Component, DynamicWrapper };
         } catch (err) {
           console.error(`Failed to load component ${name}:`, err);
-          return <div key={idx}>{idx}Error loading {name}</div>;
+          return {
+            name,
+            Component: () => <div>Error loading {name}</div>,
+            DynamicWrapper: dynamic(
+              () => Promise.resolve(() => <div>Error loading {name}</div>),
+              { ssr: false }
+            ),
+          };
         }
       })
-    )}
+    );
+
+    return (
+      <main className="min-h-screen p-4">
+        {components.map(({ client,name, Component, DynamicWrapper }, idx) => (
+          <section key={idx} className="mb-4">
+            <DynamicWrapper Component={Component}/>
+          </section>
+        ))}
       </main>
     );
   } catch (error) {
@@ -135,4 +142,4 @@ export default async function Home() {
   }
 }
 
-export const revalidate = 100;
+export const revalidate = 5;

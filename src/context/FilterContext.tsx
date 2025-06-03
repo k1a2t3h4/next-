@@ -9,7 +9,7 @@ interface Product {
   category: string;
 }
 
-interface FilterContextType {
+export interface FilterContextType {
   category: string;
   searchTerm: string;
   setCategory: (category: string) => void;

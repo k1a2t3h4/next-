@@ -1,31 +1,25 @@
-import type { Metadata } from "next";
-import { Inter } from "next/font/google";
-import "./globals.css";
-import { CartProvider } from "../context/CartContext";
-import { FilterProvider } from "../context/FilterContext";
+import type { Metadata } from 'next';
+import { Inter } from 'next/font/google';
+import './globals.css';
+import { CartProvider } from './CartWrapper';
+import { FilterProvider } from '../context/FilterContext';
 
 const inter = Inter({
-  subsets: ["latin"],
-  variable: "--font-inter",
+  subsets: ['latin'],
+  variable: '--font-inter',
 });
 
 export const metadata: Metadata = {
-  title: "Dynamic E-Commerce",
-  description: "A dynamic e-commerce website built with Next.js",
+  title: 'Dynamic E-Commerce',
+  description: 'A dynamic e-commerce website built with Next.js',
 };
 
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={`${inter.variable} antialiased`} suppressHydrationWarning>
         <CartProvider>
-          <FilterProvider>
-            {children}
-          </FilterProvider>
+          <FilterProvider>{children}</FilterProvider>
         </CartProvider>
       </body>
     </html>
