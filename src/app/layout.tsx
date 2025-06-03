@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import './globals.css';
 import { CartProvider } from './CartWrapper';
-import { FilterProvider } from '../context/FilterContext';
+
 
 const inter = Inter({
   subsets: ['latin'],
@@ -19,7 +19,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en" suppressHydrationWarning>
       <body className={`${inter.variable} antialiased`} suppressHydrationWarning>
         <CartProvider>
-          <FilterProvider>{children}</FilterProvider>
+          {children}
         </CartProvider>
       </body>
     </html>
