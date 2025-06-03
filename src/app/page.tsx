@@ -6,10 +6,18 @@ import * as esbuild from 'esbuild';
 import React from 'react';
 import ClientComponent from '../context/ClientComponent';
 
+// Validate environment variables
+const R2_BUCKET_NAME_TSX = process.env.R2_BUCKET_NAME_TSX;
+const R2_BUCKET_NAME = process.env.R2_BUCKET_NAME;
+
+if (!R2_BUCKET_NAME_TSX || !R2_BUCKET_NAME) {
+  throw new Error('Missing required environment variables: R2_BUCKET_NAME_TSX and R2_BUCKET_NAME must be set');
+}
+
 // Load a .tsx file from R2 and return the raw code (not compiled)
 async function getRawComponentFromR2(key: string): Promise<string> {
   const command = new GetObjectCommand({
-    Bucket: process.env.R2_BUCKET_NAME_TSX!,
+    Bucket: R2_BUCKET_NAME_TSX,
     Key: key,
   });
 
@@ -71,7 +79,7 @@ function evaluateComponent(code: string, isClient: boolean): React.ComponentType
 // Get the page list from R2
 async function getPagesFromR2() {
   const command = new GetObjectCommand({
-    Bucket: process.env.R2_BUCKET_NAME!,
+    Bucket: R2_BUCKET_NAME,
     Key: 'pages.json',
   });
 
