@@ -89,7 +89,7 @@ const Header = ({ data }: HeaderProps) => {
           <a className="relative text-gray-700 hover:text-primary cursor-pointer" onClick={() => router.push('/cart')}>
             <ShoppingBag/>
             {totalItems > 0 && (
-              <span className="absolute -top-2 -right-2 bg-primary text-red text-xs rounded-full w-5 h-5 flex items-center justify-center">
+              <span className="absolute -top-2 -right-2 bg-primary text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
                 {totalItems}
               </span>
             )}

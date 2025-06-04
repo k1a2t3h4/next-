@@ -6,7 +6,7 @@ import { Card, CardContent } from '@mui/material';
 import { ShoppingCart } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useCart } from '../CartWrapper';
-import { useFilter, Product } from '../FilterWrapper';
+import { useFilter } from '../FilterWrapper';
 
 interface FeaturedProductsProps {
   data?: {
@@ -26,10 +26,10 @@ const FeaturedProducts = ({ data }: FeaturedProductsProps) => {
   const { builddata } = data || {};
 
   const featuredProducts = filteredProducts
-    .filter((product: Product) => product.featured)
+    .filter(product => product.featured)
     .slice(0, builddata?.maxProducts || 4);
 
-  const handleBuyNow = (product: Product) => {
+  const handleBuyNow = (product: any) => {
     addToCart(product, 1);
     router.push('/checkout');
   };
@@ -41,7 +41,7 @@ const FeaturedProducts = ({ data }: FeaturedProductsProps) => {
           {builddata?.title || "Featured Products"}
         </h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-          {featuredProducts.map((product: Product) => (
+          {featuredProducts.map((product) => (
             <Card key={product.id} className="overflow-hidden group">
               <div className="aspect-square bg-gray-100 relative overflow-hidden">
                 <img

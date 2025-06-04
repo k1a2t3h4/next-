@@ -286,8 +286,14 @@ export default async function DynamicPage(props: PageProps) {
           sectionName: "Header",
           data: {
             builddata: {
-              title: "Welcome to Login Page",
-              success:"ready to shop"
+              title: "StyleShop",
+              routes: [
+                { name: "Home", location: "/" },
+                { name: "Products", location: "/products" },
+                { name: "Categories", location: "/categories" },
+                { name: "Profile", location: "/profile", authRequired: true },
+                { name: "My Orders", location: "/orders", authRequired: true }
+              ]
             },
             styles: {},
             state: {
@@ -297,6 +303,30 @@ export default async function DynamicPage(props: PageProps) {
             }
           }
         },
+        {
+          sectionName: "CartPage",
+          data: {
+            builddata: {
+              title: "Shopping Cart",
+              emptyCartTitle: "Your cart is empty",
+              emptyCartMessage: "Add items to your cart to see them here.",
+              continueShoppingText: "Continue Shopping",
+              continueShoppingLink: "/products",
+              orderSummaryTitle: "Order Summary",
+              shippingText: "Shipping",
+              shippingPrice: "Free",
+              subtotalText: "Subtotal",
+              totalText: "Total",
+              checkoutButtonText: "Proceed to Checkout"
+            },
+            styles: {},
+            state: {
+              key: "",
+              type: "",
+              initValue: ""
+            }
+          }
+        }
       ],
       "login":[
         {
