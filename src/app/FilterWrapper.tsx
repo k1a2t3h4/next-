@@ -123,7 +123,7 @@ interface FilterContextType {
 
 export const FilterContext = createContext<FilterContextType | null>(null);
 
-export const FilterCart = () => {
+export const useFilter = () => {
   const context = useContext(FilterContext);
   if (!context) throw new Error('useCart must be used within a CartProvider');
   return context;

@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
+import * as ReactIconsBS from 'react-icons/bs';
 
 interface Section {
   sectionName: string;
@@ -13,47 +14,101 @@ interface Props {
   data?: Record<string, any>;
   sections?: Section[];
   index?: string;
-  nestindex?: string;
-  renderedChildren?: JSX.Element[];
 }
 
 type DynamicComponent = React.FC<{
   data?: Record<string, any>;
   sections?: Section[];
-  index?:string;
+  index?: string;
 }>;
 
-export default function ClientComponent({ name, data, sections,index}: Props) {
+export default function ClientComponent({ name, data, sections, index }: Props) {
   const [Component, setComponent] = useState<DynamicComponent | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     async function loadComponent() {
-      const res = await fetch(`/api/compile?name=${name}`);
-      const { code: componentCode } = await res.json();
+      try {
+        const res = await fetch(`/api/compile?name=${name}`);
+        if (!res.ok) {
+          throw new Error(`Failed to fetch component: ${res.statusText}`);
+        }
+        
+        const { code: componentCode } = await res.json();
+        if (!componentCode) {
+          throw new Error('No component code received');
+        }
 
-      const mod = { exports: {} as { default: DynamicComponent } };
-      const func = new Function('require', 'module', 'exports', componentCode);
-      func(
-        (modName: string) => {
-          if (modName === 'react') return require('react');
-          if (modName === '../app/CartWrapper') return require('../app/CartWrapper');
-          if (modName === '../app/AuthWrapper') return require('../app/AuthWrapper');
-          if (modName === '../app/FilterWrapper') return require('../app/FilterWrapper');
-          if (modName === '../app/DynamicStateWrapper') return require('../app/DynamicStateWrapper');
-          if (modName === 'next/navigation') return require('next/navigation');
-          return {};
-        },
-        mod,
-        mod.exports
-      );
-      
-      setComponent(() => mod.exports.default);
+        // Create a module object to hold the exports
+        const mod = { exports: {} as { default: DynamicComponent } };
+        
+        // Create a require function that handles all necessary imports
+        const requireShim = (modName: string) => {
+          switch (modName) {
+            case 'react':
+              return require('react');
+            case '../app/CartWrapper':
+              return require('../app/CartWrapper');
+            case '../app/AuthWrapper':
+              return require('../app/AuthWrapper');
+            case '../app/FilterWrapper':
+              return require('../app/FilterWrapper');
+            case '../app/DynamicStateWrapper':
+              return require('../app/DynamicStateWrapper');
+            case 'react-icons/ai':
+              return require('react-icons/ai');
+            case 'lucide-react':
+              return require('lucide-react');
+            case '@mui/x-data-grid':
+              return require('@mui/x-data-grid');
+            case '@mui/x-tree-view':
+              return require('@mui/x-tree-view');
+            case 'next/navigation':
+              return require('next/navigation');
+            case '@mui/material':
+              return require('@mui/material');
+            default:
+              console.warn(`Unknown module requested: ${modName}`);
+              return {};
+          }
+        };
+
+        // Evaluate the component code
+        const func = new Function('require', 'module', 'exports', componentCode);
+        func(requireShim, mod, mod.exports);
+
+        // Check if we got a valid component
+        if (!mod.exports.default) {
+          throw new Error('Component did not export a default component');
+        }
+
+        setComponent(() => mod.exports.default);
+        setError(null);
+      } catch (error) {
+        console.error(`Failed to load component ${name}:`, error);
+        setError(error instanceof Error ? error.message : 'Failed to load component');
+        setComponent(null);
+      }
     }
 
     loadComponent();
   }, [name]);
 
-  if (!Component) return <div>Loading component...</div>;
+  if (error) {
+    return <div suppressHydrationWarning>Error loading {name}: {error}</div>;
+  }
 
-  return <Component data={data} sections={sections} index={index} />;
+  if (!Component) {
+    return <div suppressHydrationWarning>Loading {name}...</div>;
+  }
+
+  return (
+    <div suppressHydrationWarning>
+      <Component 
+        data={data} 
+        sections={sections} 
+        index={index}
+      />
+    </div>
+  );
 }

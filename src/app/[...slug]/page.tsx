@@ -107,6 +107,71 @@ interface PageProps {
     slug?: string[];
   };
 }
+interface Section {
+  sectionName: string;
+  data: Record<string, any>;
+  Section?: Section[];
+}
+interface ComponentData {
+  sectionName: string;
+  data: {
+    builddata: Record<string, any>;
+    styles: Record<string, any>;
+    state: {
+      key: string;
+      type: string;
+      initValue: string;
+    };
+  };
+  sections: Section[];
+}
+interface ComponentProps {
+  data?: Record<string, any>;
+  sections?: Section[];
+}
+async function renderSection(component: ComponentData, idx: string) {
+try {
+  const key = `${component.sectionName}.tsx`;
+
+  // Step 1: Get raw source code
+  const rawCode = await getRawComponentFromR2(key);
+
+  // Step 2: Detect client component
+  const client = isClientComponent(rawCode);
+  if(client) {
+    return (
+      <div key={idx} className="section-container" suppressHydrationWarning>
+      <ClientComponent 
+        name={component.sectionName}
+        data={component.data}
+        index={idx}
+      />
+    </div>
+  )
+  } else {
+    // Step 3: Compile the raw code to JS
+    const compiledCode = await compileComponent(rawCode);
+    
+    // Step 4: Evaluate the compiled code with proper require shim
+    const Component = evaluateComponent(compiledCode)
+
+    // Step 5: Create dynamic wrapper with SSR option
+    const DynamicComponent = dynamic(
+      () => Promise.resolve(({ Component, data, sections }: { 
+        Component: React.ComponentType<ComponentProps>,
+        data?: Record<string, any>,
+        sections?: Section[],
+      }) => <Component data={data} sections={sections} />),
+      { ssr: true }
+    );
+    return (
+    <div key={idx} suppressHydrationWarning><DynamicComponent Component={Component} data={component.data} sections={component.sections}/></div>)
+  }
+} catch (err) {
+  console.error(`Failed to load component ${component.sectionName}:`, err);
+  return <div key={idx} suppressHydrationWarning>Error loading {component.sectionName}</div>;
+}
+}
 
 export default async function DynamicPage(props: PageProps) {
   const { params } = props;
@@ -116,13 +181,156 @@ export default async function DynamicPage(props: PageProps) {
   try {
     // Get pages data from R2
     const data = {
-      "": ["Header","AddToCartButton","CartItemCount"],
-      "blog": ["Header"],
-      "products": ["Header"],
-      "products/product1/detail": ["Header"],
-      "cart": ["Header"],
-      "login":[""]
-    } as Record<string, string[]>;
+      "not-found": [
+        {
+          sectionName: "Header",
+          data: {
+            builddata: {
+              title: "Welcome to Login Page",
+              success:"ready to shop"
+            },
+            styles: {},
+            state: {
+              key: "",
+              type: "",
+              initValue: ""
+            }
+          }
+        },
+      ],
+      "blog": [
+        {
+          sectionName: "Header",
+          data: {
+            builddata: {
+              title: "Welcome to Login Page",
+              success:"ready to shop"
+            },
+            styles: {},
+            state: {
+              key: "",
+              type: "",
+              initValue: ""
+            }
+          }
+        },
+      ],
+      "categories": [
+        {
+          sectionName: "Header",
+          data: {
+            builddata: {
+              title: "Welcome to Login Page",
+              success:"ready to shop"
+            },
+            styles: {},
+            state: {
+              key: "",
+              type: "",
+              initValue: ""
+            }
+          }
+        },
+      ],
+      "products": [
+        {
+          sectionName: "Header",
+          data: {
+            builddata: {
+              title: "Welcome to Login Page",
+              success:"ready to shop"
+            },
+            styles: {},
+            state: {
+              key: "",
+              type: "",
+              initValue: ""
+            }
+          }
+        },
+        {
+          sectionName: "productlist",
+          data: {
+            builddata: {
+              title: "Welcome to Login Page",
+              success:"ready to shop"
+            },
+            styles: {},
+            state: {
+              key: "",
+              type: "",
+              initValue: ""
+            }
+          }
+        },
+      ],
+      "products/product1/detail": [
+        {
+          sectionName: "Header",
+          data: {
+            builddata: {
+              title: "Welcome to Login Page",
+              success:"ready to shop"
+            },
+            styles: {},
+            state: {
+              key: "",
+              type: "",
+              initValue: ""
+            }
+          }
+        },
+      ],
+      "cart": [
+        {
+          sectionName: "Header",
+          data: {
+            builddata: {
+              title: "Welcome to Login Page",
+              success:"ready to shop"
+            },
+            styles: {},
+            state: {
+              key: "",
+              type: "",
+              initValue: ""
+            }
+          }
+        },
+      ],
+      "login":[
+        {
+          sectionName: "Header",
+          data: {
+            builddata: {
+              title: "Welcome to Login Page",
+              success:"ready to shop"
+            },
+            styles: {},
+            state: {
+              key: "",
+              type: "",
+              initValue: ""
+            }
+          }
+        },
+        {
+          sectionName: "LoginPage",
+          data: {
+            builddata: {
+              title: "Welcome to Login Page",
+              success:"ready to shop"
+            },
+            styles: {},
+            state: {
+              key: "",
+              type: "",
+              initValue: ""
+            }
+          }
+        },
+      ]
+    } as unknown as { [key: string]: ComponentData[] };
     const componentList = data[slugPath];
 
     if (!componentList) {
@@ -131,41 +339,9 @@ export default async function DynamicPage(props: PageProps) {
 
     // Load components from R2
     return (
-      <main className="min-h-screen p-4">
+      <main className="min-h-screen" suppressHydrationWarning>
         {await Promise.all(
-      componentList.map(async (name: string, idx: number) => {
-        try {
-          const key = `${name}.tsx`;
-
-          // Step 1: Get raw source code
-          const rawCode = await getRawComponentFromR2(key);
-
-          // Step 2: Detect client component
-          const client = isClientComponent(rawCode);
-          if(client)
-          {
-            return (<div key={idx}><ClientComponent name={name}/></div>)
-          } else {
-            // Step 3: Compile the raw code to JS
-            const compiledCode = await compileComponent(rawCode);
-            
-            // Step 4: Evaluate the compiled code with proper require shim
-            const Component = evaluateComponent(compiledCode)
-
-            // Step 5: Create dynamic wrapper with SSR option depending on client/server
-            const DynamicComponent = dynamic(
-              () => Promise.resolve(({ Component }: { Component: React.ComponentType }) => <Component />),
-              { ssr: true } // Disable SSR if client component
-            );
-            return (<div key={idx}><DynamicComponent Component={Component} /></div>)
-          }
-          
-        } catch (err) {
-          console.error(`Failed to load component ${name}:`, err);
-          return <div key={idx}>{idx}Error loading {name}</div>;
-        }
-      })
-    )}
+          componentList.map(async (component: ComponentData, idx: number) => renderSection(component,idx.toString())))}
       </main>
     );
   } catch (error) {

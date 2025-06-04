@@ -2,61 +2,13 @@
 
 import React, { createContext, useContext} from 'react';
 
-
-export interface User {
-    id: string;
-    email: string;
-    name: string;
-    role: 'customer';
-  }
-  export const users: User[] = [
-    {
-      id: '2',
-      email: 'customer@example.com',
-      name: 'John Customer',
-      role: 'customer'
-    }
-  ];
+type AuthContextType = any;
   
-  export const findUserByEmail = (email: string): User | undefined => {
-    return users.find(user => user.email === email);
-  };
-  
-  export const validateUser = (email: string, password: string): User | null => {
-    // In a real app, this would check password hashes
-    // For demo purposes, any password works for existing emails
-    const user = findUserByEmail(email);
-    return user ? user : null;
-  };
-
-  interface AuthContextType {
-    user: User | null;
-    loading: boolean;
-    login: (email: string, password: string) => Promise<boolean>;
-    logout: () => void;
-    // Add demo credentials for easy testing
-    demoCredentials: {
-      customer: { email: string; password: string };
-      admin: { email: string; password: string };
-    };
-  }
-
-  const defaultAuthContext: AuthContextType = {
-    user: null,
-    loading: false,
-    login: async () => false,
-    logout: () => {},
-    demoCredentials: {
-      customer: { email: '', password: '' },
-      admin: { email: '', password: '' }
-    }
-  };
-  
-export const AuthContext = createContext<AuthContextType>(defaultAuthContext)||(null);
+export const AuthContext = createContext<AuthContextType>(null) || null;
 
 export const useAuth = () => {
   const context = useContext(AuthContext);
-  if (!context) throw new Error('useCart must be used within a CartProvider');
+  if (!context) throw new Error('useAuth must be used within an AuthProvider');
   return context;
 };
 
@@ -65,12 +17,11 @@ const contextCodeFromDB = `
     const [loading, setLoading] = React.useState(true);
     const [email, setEmail] = React.useState('');
     const [password, setPassword] = React.useState('');
-    const users=[
-      {
+    const users = {
         email: 'customer@example.com',
         name: 'John Customer',
-      }
-    ];
+        password: 'password123'
+    };
 
     React.useEffect(() => {
       try {
@@ -85,14 +36,15 @@ const contextCodeFromDB = `
         setLoading(false);
       }
     }, []);
-    const findUserByEmail = async (email)=> {
-      return users.find(user => user.email === email);
+
+    const findUserByEmail = (email, password) => {
+      return users.email === email && users.password === password ? users : null;
     };
 
-    const validateUser = async (email, password)=>{
-      const user = findUserByEmail(email);
-      return user ? user : null;
+    const validateUser = (email, password) => {
+      return findUserByEmail(email, password);
     };
+
     const login = async (email, password) => {
       try {
         const user = validateUser(email, password);
@@ -133,6 +85,7 @@ const contextCodeFromDB = `
       logout,
       setEmail,
       setPassword,
+      users
     };
 `;
 

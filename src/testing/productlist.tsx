@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { FilterCart, Product } from '../app/FilterWrapper';
+import { useFilter, Product } from '../app/FilterWrapper';
 
 export default function ProductList () {
   const {
@@ -18,7 +18,7 @@ export default function ProductList () {
     setShowFeaturedOnly,
     handleSearch,
     applyFilters,
-  } = FilterCart();
+  } = useFilter();
 
   // Get unique categories from products
   const categories = ['all', 'tshirts', 'jeans', 'shoes', 'dresses', 'jackets', 'sweaters', 'pants'];

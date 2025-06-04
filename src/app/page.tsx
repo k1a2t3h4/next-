@@ -17,12 +17,28 @@ if (!R2_BUCKET_NAME_TSX || !R2_BUCKET_NAME) {
 // Add these interfaces at the top of the file after the imports
 interface Section {
   sectionName: string;
-  data: Record<string, any>;
+  data: {
+    builddata?: Record<string, any>;
+    styles?: Record<string, any>;
+    state?: {
+      key: string;
+      type: string;
+      initValue: any;
+    };
+  };
   Section?: Section[];
 }
 
 interface ComponentProps {
-  data?: Record<string, any>;
+  data?: {
+    builddata?: Record<string, any>;
+    styles?: Record<string, any>;
+    state?: {
+      key: string;
+      type: string;
+      initValue: any;
+    };
+  };
   sections?: Section[];
 }
 
@@ -72,7 +88,6 @@ function evaluateComponent(code: string): React.ComponentType {
   const requireShim = (mod: string) => {
     if (mod === 'react') return require('react')
     if (mod === 'next/link') return require('next/link');
-    if (mod === 'next/navigation') return require('next/navigation');
     throw new Error(`Cannot resolve module: ${mod}`);
   };
 
@@ -109,7 +124,7 @@ async function renderSection(section: Section, idx: string) {
     const client = isClientComponent(rawCode);
     if (client) {
       return (
-        <div key={idx} className="section-container">
+        <div key={idx} className="section-container" suppressHydrationWarning>
           <ClientComponent 
             name={section.sectionName}
             data={section.data}
@@ -136,7 +151,7 @@ async function renderSection(section: Section, idx: string) {
       );
 
       return (
-        <div key={idx} className="section-container">
+        <div key={idx} className="section-container" suppressHydrationWarning>
           <DynamicComponent
             Component={Component}
             data={section.data}
@@ -147,7 +162,7 @@ async function renderSection(section: Section, idx: string) {
     }
   } catch (err) {
     console.error(`Failed to load component ${section.sectionName}:`, err);
-    return <div key={idx}>Error loading {section.sectionName}</div>;
+    return <div key={idx} suppressHydrationWarning>Error loading {section.sectionName}</div>;
   }
 }
 
@@ -156,15 +171,16 @@ export default async function Home() {
     // const pagesData = await getPagesFromR2();
     const pagesData = [
       {
-        sectionName: "AddToCartButton",
+        sectionName: "Header",
         data: {
           builddata: {
-            title: "Welcome to My Component",
-            description: "This is a sample component showing how to use data",
-            items: [
-              "First item in the list",
-              "Second item in the list",
-              "Third item in the list"
+            title: "StyleShop",
+            routes: [
+              { name: "Home", location: "/" },
+              { name: "Products", location: "/products" },
+              { name: "Categories", location: "/categories" },
+              { name: "Profile", location: "/profile", authRequired: true },
+              { name: "My Orders", location: "/orders", authRequired: true }
             ]
           },
           styles: {},
@@ -176,129 +192,189 @@ export default async function Home() {
         }
       },
       {
-      sectionName: "CartItemCount",
-      data: {
-        builddata: {
-          title: "Welcome to My Component",
-          description: "This is a sample component showing how to use data",
-          items: [
-            "First item in the list",
-            "Second item in the list",
-            "Third item in the list"
-          ]
-        },
-        styles: {},
-        state: {
-          key: "",
-          type: "",
-          initValue: ""
+        sectionName: "FeaturedProducts",
+        data: {
+          builddata: {
+            title: "Featured Products",
+            viewAllText: "View All Products",
+            viewAllLink: "/products",
+            maxProducts: 4
+          },
+          styles: {},
+          state: {
+            key: "",
+            type: "",
+            initValue: ""
+          }
         }
-      }
-    },
-    {
-      sectionName: "test1",
-      data: {
-        builddata: {
-          title: "Welcome to My Component",
-          description: "This is a sample component showing how to use data",
-          items: [
-            "First item in the list",
-            "Second item in the list",
-            "Third item in the list"
-          ]
-        },
-        styles: {},
-        state: {
-          key: "",
-          type: "",
-          initValue: ""
+      },
+      {
+        sectionName: "HeroBanner",
+        data: {
+          builddata: {
+            title: "Welcome to StyleShop",
+            subtitle: "Your one-stop shop for fashion",
+            buttonText: "Shop Now",
+            buttonLink: "/products"
+          },
+          styles: {},
+          state: {
+            key: "",
+            type: "",
+            initValue: ""
+          }
         }
-      }
-    },
-    {
-      sectionName: "test2",
-      data: {
-        builddata: {
-          title: "Welcome to My Component",
-          description: "This is a sample component showing how to use data",
-          items: [
-            "First item in the list",
-            "Second item in the list",
-            "Third item in the list"
-          ]
-        },
-        styles: {},
-        state: {
-          key: "",
-          type: "",
-          initValue: ""
-        }
-      }
-    },
-    {
-      sectionName: "statevaluechecker",
-      data: {
-        builddata: {
-          title: "Welcome to My Component",
-          description: "This is a sample component showing how to use data",
-          items: [
-            "First item in the list",
-            "Second item in the list",
-            "Third item in the list"
-          ]
-        },
-        styles: {},
-        state: {
-          key: "",
-          type: "",
-          initValue: ""
-        }
-      }
-    },
-    {
-      sectionName: "productlist",
-      data: {
-        builddata: {
-          title: "Welcome to My Component",
-          description: "This is a sample component showing how to use data",
-          items: [
-            "First item in the list",
-            "Second item in the list",
-            "Third item in the list"
-          ]
-        },
-        styles: {},
-        state: {
-          key: "",
-          type: "",
-          initValue: ""
-        }
-      }
-    },
-    {
-      sectionName: "authverify",
-      data: {
-        builddata: {
-          title: "Welcome to My Component",
-          description: "This is a sample component showing how to use data",
-          items: [
-            "First item in the list",
-            "Second item in the list",
-            "Third item in the list"
-          ]
-        },
-        styles: {},
-        state: {
-          key: "",
-          type: "",
-          initValue: ""
-        }
-      }
-    }
+      },
+      
+    //   {
+    //     sectionName: "AddToCartButton",
+    //     data: {
+    //       builddata: {
+    //         title: "Welcome to My Component",
+    //         description: "This is a sample component showing how to use data",
+    //         items: [
+    //           "First item in the list",
+    //           "Second item in the list",
+    //           "Third item in the list"
+    //         ]
+    //       },
+    //       styles: {},
+    //       state: {
+    //         key: "",
+    //         type: "",
+    //         initValue: ""
+    //       }
+    //     }
+    //   },
+    //   {
+    //   sectionName: "CartItemCount",
+    //   data: {
+    //     builddata: {
+    //       title: "Welcome to My Component",
+    //       description: "This is a sample component showing how to use data",
+    //       items: [
+    //         "First item in the list",
+    //         "Second item in the list",
+    //         "Third item in the list"
+    //       ]
+    //     },
+    //     styles: {},
+    //     state: {
+    //       key: "",
+    //       type: "",
+    //       initValue: ""
+    //     }
+    //   }
+    // },
+    // {
+    //   sectionName: "test1",
+    //   data: {
+    //     builddata: {
+    //       title: "Welcome to My Component",
+    //       description: "This is a sample component showing how to use data",
+    //       items: [
+    //         "First item in the list",
+    //         "Second item in the list",
+    //         "Third item in the list"
+    //       ]
+    //     },
+    //     styles: {},
+    //     state: {
+    //       key: "",
+    //       type: "",
+    //       initValue: ""
+    //     }
+    //   }
+    // },
+    // {
+    //   sectionName: "test2",
+    //   data: {
+    //     builddata: {
+    //       title: "Welcome to My Component",
+    //       description: "This is a sample component showing how to use data",
+    //       items: [
+    //         "First item in the list",
+    //         "Second item in the list",
+    //         "Third item in the list"
+    //       ]
+    //     },
+    //     styles: {},
+    //     state: {
+    //       key: "",
+    //       type: "",
+    //       initValue: ""
+    //     }
+    //   }
+    // },
+    // {
+    //   sectionName: "statevaluechecker",
+    //   data: {
+    //     builddata: {
+    //       title: "Welcome to My Component",
+    //       description: "This is a sample component showing how to use data",
+    //       items: [
+    //         "First item in the list",
+    //         "Second item in the list",
+    //         "Third item in the list"
+    //       ]
+    //     },
+    //     styles: {},
+    //     state: {
+    //       key: "",
+    //       type: "",
+    //       initValue: ""
+    //     }
+    //   }
+    // },  
+    // {
+    //   sectionName: "authverify",
+    //   data: {
+    //     builddata: {
+    //       title: "Welcome to My Component",
+    //       description: "This is a sample component showing how to use data",
+    //       items: [
+    //         "First item in the list",
+    //         "Second item in the list",
+    //         "Third item in the list"
+    //       ]
+    //     },
+    //     styles: {},
+    //     state: {
+    //       key: "",
+    //       type: "",
+    //       initValue: ""
+    //     }
+    //   }
+    // }
     ];
+  //   const command = new GetObjectCommand({
+  //     Bucket: R2_BUCKET_NAME_TSX,
+  //     Key: `${slugPath}.json`,
+  //   });
+
+  //   const response = await r2Client.send(command);
+  //   const pageData = await response.Body?.transformToString();
     
+  //   if (!pageData) {
+  //     notFound();
+  //   }
+
+  //   const sections = JSON.parse(pageData);
+
+  //   return (
+  //     <div className="dynamic-page">
+  //       {sections.map((section: ComponentData, idx: number) => (
+  //         <React.Fragment key={idx}>
+  //           {renderSection(section, idx.toString())}
+  //         </React.Fragment>
+  //       ))}
+  //     </div>
+  //   );
+  // } catch (error) {
+  //   console.error('Error in DynamicPage:', error);
+  //   notFound();
     return (
-      <main className="min-h-screen p-4">
+      <main className="min-h-screen" suppressHydrationWarning>
         {await Promise.all(pagesData.map((section, idx) => renderSection(section, idx.toString())))}
       </main>
     );
