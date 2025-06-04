@@ -3,7 +3,7 @@ import { GetObjectCommand } from '@aws-sdk/client-s3';
 import { r2Client } from '@/lib/r2';
 import dynamic from 'next/dynamic';
 import * as esbuild from 'esbuild';
-import React, { Suspense } from 'react';
+import React from 'react';
 import ClientComponent from '../context/ClientComponent';
 
 // Validate environment variables
@@ -27,11 +27,11 @@ interface ComponentProps {
 }
 
 // Update the ClientComponent props
-interface ClientComponentProps {
-  name: string;
-  data?: Record<string, any>;
-  sections?: Section[];
-}
+// interface ClientComponentProps {
+//   name: string;
+//   data?: Record<string, any>;
+//   sections?: Section[];
+// }
 
 // Load a .tsx file from R2 and return the raw code (not compiled)
 async function getRawComponentFromR2(key: string): Promise<string> {
@@ -298,15 +298,13 @@ export default async function Home() {
     ];
     
     return (
-      <Suspense fallback={<div>Loading...</div>}>
-        <div className="container mx-auto">
-          {pagesData.map((section, idx) => renderSection(section, idx.toString()))}
-        </div>
-      </Suspense>
+      <main className="min-h-screen p-4">
+        {await Promise.all(pagesData.map((section, idx) => renderSection(section, idx.toString())))}
+      </main>
     );
   } catch (error) {
-    console.error('Error rendering page:', error);
-    return <div>Error loading page</div>;
+    console.error('Error loading page:', error);
+    return <div>Failed to load components</div>;
   }
 }
 
