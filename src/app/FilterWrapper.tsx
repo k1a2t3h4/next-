@@ -2,6 +2,7 @@
 
 import React, { createContext, useContext } from 'react';
 import { useRouter, usePathname, useSearchParams } from 'next/navigation';
+
 export interface Product {
     id: string;
     name: string;
@@ -11,7 +12,8 @@ export interface Product {
     imageUrl: string;
     inventory: number;
     featured: boolean;
-  }
+}
+
 export const products: Product[] = [
     {
       id: '1',
@@ -93,9 +95,9 @@ export const products: Product[] = [
       inventory: 40,
       featured: true
     }
-  ];
+];
+
 interface FilterContextType {
-    // Filter state
     searchQuery: string;
     setSearchQuery: (query: string) => void;
     filteredProducts: any[];
@@ -107,8 +109,6 @@ interface FilterContextType {
     setSortBy: (sort: string) => void;
     showFeaturedOnly: boolean;
     setShowFeaturedOnly: (featured: boolean) => void;
-    
-    // Filter functions
     handleSearch: (query: string) => void;
     applyFilters: () => void;
     filterProducts: (
@@ -118,8 +118,7 @@ interface FilterContextType {
       sort: string,
       featured: boolean
     ) => any[];
-  }
-
+}
 
 export const FilterContext = createContext<FilterContextType | null>(null);
 
@@ -129,7 +128,11 @@ export const useFilter = () => {
   return context;
 };
 
-const contextCodeFromDB = `
+export const filterContextConfig = {
+  strictMode: "use strict",
+  dependencies: ["React", "useRouter", "usePathname", "useSearchParams", "products"],
+  dependenciesfn:[React, useRouter, usePathname, useSearchParams, products],
+  contextCode: `
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -142,28 +145,26 @@ const contextCodeFromDB = `
   const [showFeaturedOnly, setShowFeaturedOnly] = React.useState(false);
 
   React.useEffect(() => {
-    
-      const category = searchParams.get('category');
-      const minPrice = searchParams.get('minPrice');
-      const maxPrice = searchParams.get('maxPrice');
-      const sort = searchParams.get('sort');
-      const featured = searchParams.get('featured');
-      const query = searchParams.get('q');
+    const category = searchParams.get('category');
+    const minPrice = searchParams.get('minPrice');
+    const maxPrice = searchParams.get('maxPrice');
+    const sort = searchParams.get('sort');
+    const featured = searchParams.get('featured');
+    const query = searchParams.get('q');
 
-      if (category) setSelectedCategory(category);
-      if (minPrice && maxPrice) setPriceRange([parseInt(minPrice), parseInt(maxPrice)]);
-      if (sort) setSortBy(sort);
-      if (featured) setShowFeaturedOnly(featured === 'true');
-      if (query) setSearchQuery(query);
+    if (category) setSelectedCategory(category);
+    if (minPrice && maxPrice) setPriceRange([parseInt(minPrice), parseInt(maxPrice)]);
+    if (sort) setSortBy(sort);
+    if (featured) setShowFeaturedOnly(featured === 'true');
+    if (query) setSearchQuery(query);
 
-      filterProducts(
-        category || selectedCategory,
-        query || searchQuery,
-        minPrice && maxPrice ? [parseInt(minPrice), parseInt(maxPrice)] : priceRange,
-        sort || sortBy,
-        featured ? featured === 'true' : showFeaturedOnly
-      );
-    
+    filterProducts(
+      category || selectedCategory,
+      query || searchQuery,
+      minPrice && maxPrice ? [parseInt(minPrice), parseInt(maxPrice)] : priceRange,
+      sort || sortBy,
+      featured ? featured === 'true' : showFeaturedOnly
+    );
   }, [searchParams]);
 
   const filterProducts = (category, query, price, sort, featured) => {
@@ -270,12 +271,13 @@ const contextCodeFromDB = `
     applyFilters,
     filterProducts
   };
-`;
+  `
+};
 
 export const FilterProvider = ({ children }: { children: React.ReactNode }) => {
   const contextValue = (() => {
-    const fn = new Function('React', 'useRouter', 'usePathname', 'useSearchParams','products', `"use strict"; ${contextCodeFromDB}`);
-    return fn(React, useRouter, usePathname, useSearchParams,products);
+    const fn = new Function(...filterContextConfig.dependencies, `"use strict";${filterContextConfig.contextCode}`);
+    return fn(...filterContextConfig.dependenciesfn);
   })();
 
   return (

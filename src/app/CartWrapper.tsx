@@ -2,6 +2,7 @@
 
 import React, { createContext, useContext } from 'react';
 
+
 type CartContextType = {
   [key: string]: any;
 };
@@ -13,8 +14,11 @@ export const useCart = () => {
   if (!context) throw new Error('useCart must be used within a CartProvider');
   return context;
 };
-
-const contextCodeFromDB = `
+export const cartContextConfig = {
+  strictMode: "use strict",
+  dependencies: ["React"],
+  dependenciesfn:[React],
+  contextCode: `
   const [items, setItems] = React.useState([]);
   const [checkoutItems, setCheckoutItems] = React.useState([]);
 
@@ -123,12 +127,12 @@ const contextCodeFromDB = `
     totalItems,
     totalPrice
   };
-`;
-
+`
+}; 
 export const CartProvider = ({ children }: { children: React.ReactNode }) => {
   const contextValue = (() => {
-    const fn = new Function('React', `"use strict"; ${contextCodeFromDB}`);
-    return fn(React);
+    const fn = new Function(...cartContextConfig.dependencies, `"use strict";${cartContextConfig.contextCode}`);
+    return fn(...cartContextConfig.dependenciesfn);
   })();
 
   return (

@@ -12,7 +12,11 @@ export const useAuth = () => {
   return context;
 };
 
-const contextCodeFromDB = `
+export const authContextConfig = {
+  strictMode: "use strict",
+  dependencies: ["React"],
+  dependenciesfn:[React],
+  contextCode: `
     const [user, setUser] = React.useState(null);
     const [loading, setLoading] = React.useState(true);
     const [email, setEmail] = React.useState('');
@@ -87,12 +91,13 @@ const contextCodeFromDB = `
       setPassword,
       users
     };
-`;
+  `
+};
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const contextValue = (() => {
-    const fn = new Function('React', contextCodeFromDB);
-    return fn(React);
+    const fn = new Function(...authContextConfig.dependencies, `"use strict";${authContextConfig.contextCode}`);
+    return fn(...authContextConfig.dependenciesfn);
   })();
 
   return (

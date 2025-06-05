@@ -181,13 +181,42 @@ export default async function DynamicPage(props: PageProps) {
   try {
     // Get pages data from R2
     const data = {
+      "profile": [
+        {
+          sectionName: "Header",
+          data: {
+            builddata: {
+              title: "StyleShop",
+              routes: [
+                { name: "Home", location: "/" },
+                { name: "Products", location: "/products" },
+                { name: "Categories", location: "/categories" },
+                { name: "Profile", location: "/profile", authRequired: true },
+                { name: "My Orders", location: "/orders", authRequired: true }
+              ]
+            },
+            styles: {},
+            state: {
+              key: "",
+              type: "",
+              initValue: ""
+            }
+          }
+        },
+      ],
       "not-found": [
         {
           sectionName: "Header",
           data: {
             builddata: {
-              title: "Welcome to Login Page",
-              success:"ready to shop"
+              title: "StyleShop",
+              routes: [
+                { name: "Home", location: "/" },
+                { name: "Products", location: "/products" },
+                { name: "Categories", location: "/categories" },
+                { name: "Profile", location: "/profile", authRequired: true },
+                { name: "My Orders", location: "/orders", authRequired: true }
+              ]
             },
             styles: {},
             state: {
@@ -203,8 +232,14 @@ export default async function DynamicPage(props: PageProps) {
           sectionName: "Header",
           data: {
             builddata: {
-              title: "Welcome to Login Page",
-              success:"ready to shop"
+              title: "StyleShop",
+              routes: [
+                { name: "Home", location: "/" },
+                { name: "Products", location: "/products" },
+                { name: "Categories", location: "/categories" },
+                { name: "Profile", location: "/profile", authRequired: true },
+                { name: "My Orders", location: "/orders", authRequired: true }
+              ]
             },
             styles: {},
             state: {
@@ -220,8 +255,14 @@ export default async function DynamicPage(props: PageProps) {
           sectionName: "Header",
           data: {
             builddata: {
-              title: "Welcome to Login Page",
-              success:"ready to shop"
+              title: "StyleShop",
+              routes: [
+                { name: "Home", location: "/" },
+                { name: "Products", location: "/products" },
+                { name: "Categories", location: "/categories" },
+                { name: "Profile", location: "/profile", authRequired: true },
+                { name: "My Orders", location: "/orders", authRequired: true }
+              ]
             },
             styles: {},
             state: {
@@ -237,8 +278,14 @@ export default async function DynamicPage(props: PageProps) {
           sectionName: "Header",
           data: {
             builddata: {
-              title: "Welcome to Login Page",
-              success:"ready to shop"
+              title: "StyleShop",
+              routes: [
+                { name: "Home", location: "/" },
+                { name: "Products", location: "/products" },
+                { name: "Categories", location: "/categories" },
+                { name: "Profile", location: "/profile", authRequired: true },
+                { name: "My Orders", location: "/orders", authRequired: true }
+              ]
             },
             styles: {},
             state: {
@@ -269,8 +316,14 @@ export default async function DynamicPage(props: PageProps) {
           sectionName: "Header",
           data: {
             builddata: {
-              title: "Welcome to Login Page",
-              success:"ready to shop"
+              title: "StyleShop",
+              routes: [
+                { name: "Home", location: "/" },
+                { name: "Products", location: "/products" },
+                { name: "Categories", location: "/categories" },
+                { name: "Profile", location: "/profile", authRequired: true },
+                { name: "My Orders", location: "/orders", authRequired: true }
+              ]
             },
             styles: {},
             state: {
@@ -326,15 +379,38 @@ export default async function DynamicPage(props: PageProps) {
               initValue: ""
             }
           }
-        }
+        },
+        {
+          sectionName: "HeroBanner",
+          data: {
+            builddata: {
+              title: "Welcome to StyleShop",
+              subtitle: "Your one-stop shop for fashion",
+              buttonText: "Shop Now",
+              buttonLink: "/products"
+            },
+            styles: {},
+            state: {
+              key: "",
+              type: "",
+              initValue: ""
+            }
+          }
+        },
       ],
       "login":[
         {
           sectionName: "Header",
           data: {
             builddata: {
-              title: "Welcome to Login Page",
-              success:"ready to shop"
+              title: "StyleShop",
+              routes: [
+                { name: "Home", location: "/" },
+                { name: "Products", location: "/products" },
+                { name: "Categories", location: "/categories" },
+                { name: "Profile", location: "/profile", authRequired: true },
+                { name: "My Orders", location: "/orders", authRequired: true }
+              ]
             },
             styles: {},
             state: {
@@ -359,7 +435,30 @@ export default async function DynamicPage(props: PageProps) {
             }
           }
         },
-      ]
+      ],
+      "orders": [
+        {
+          sectionName: "Header",
+          data: {
+            builddata: {
+              title: "StyleShop",
+              routes: [
+                { name: "Home", location: "/" },
+                { name: "Products", location: "/products" },
+                { name: "Categories", location: "/categories" },
+                { name: "Profile", location: "/profile", authRequired: true },
+                { name: "My Orders", location: "/orders", authRequired: true }
+              ]
+            },
+            styles: {},
+            state: {
+              key: "",
+              type: "",
+              initValue: ""
+            }
+          }
+        },
+      ],
     } as unknown as { [key: string]: ComponentData[] };
     const componentList = data[slugPath];
 

@@ -33,7 +33,11 @@ export const useDynamicState = () => {
   return context;
 };
 
-const contextCodeFromDB = `
+export const dynamicStateConfig = {
+  strictMode: "use strict",
+  dependencies: ["React"],
+  dependenciesfn:[React],
+  contextCode: `
   const [stringStates, setStringStates] = React.useState({});
   const [numberStates, setNumberStates] = React.useState({});
   const [booleanStates, setBooleanStates] = React.useState({});
@@ -200,12 +204,13 @@ const contextCodeFromDB = `
     getAllStates,
     getStateCount
   };
-`;
+  `
+};
 
 export const DynamicStateProvider = ({ children }: { children: React.ReactNode }) => {
   const contextValue = (() => {
-    const fn = new Function('React', `"use strict"; ${contextCodeFromDB}`);
-    return fn(React);
+    const fn = new Function(...dynamicStateConfig.dependencies, `"use strict";${dynamicStateConfig.contextCode}`);
+    return fn(...dynamicStateConfig.dependenciesfn);
   })();
 
   return (
