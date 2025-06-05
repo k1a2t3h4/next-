@@ -170,44 +170,44 @@ export default async function Home() {
   try {
     // const pagesData = await getPagesFromR2();
     const pagesData = [
-      {
-        sectionName: "Header",
-        data: {
-          builddata: {
-            title: "StyleShop",
-            routes: [
-              { name: "Home", location: "/" },
-              { name: "Products", location: "/products" },
-              { name: "Categories", location: "/categories" },
-              { name: "Profile", location: "/profile", authRequired: true },
-              { name: "My Orders", location: "/orders", authRequired: true }
-            ]
-          },
-          styles: {},
-          state: {
-            key: "",
-            type: "",
-            initValue: ""
-          }
-        }
-      },
-      {
-        sectionName: "FeaturedProducts",
-        data: {
-          builddata: {
-            title: "Featured Products",
-            viewAllText: "View All Products",
-            viewAllLink: "/products",
-            maxProducts: 4
-          },
-          styles: {},
-          state: {
-            key: "",
-            type: "",
-            initValue: ""
-          }
-        }
-      },
+      // {
+      //   sectionName: "Header",
+      //   data: {
+      //     builddata: {
+      //       title: "StyleShop",
+      //       routes: [
+      //         { name: "Home", location: "/" },
+      //         { name: "Products", location: "/products" },
+      //         { name: "Categories", location: "/categories" },
+      //         { name: "Profile", location: "/profile", authRequired: true },
+      //         { name: "My Orders", location: "/orders", authRequired: true }
+      //       ]
+      //     },
+      //     styles: {},
+      //     state: {
+      //       key: "",
+      //       type: "",
+      //       initValue: ""
+      //     }
+      //   }
+      // },
+      // {
+      //   sectionName: "FeaturedProducts",
+      //   data: {
+      //     builddata: {
+      //       title: "Featured Products",
+      //       viewAllText: "View All Products",
+      //       viewAllLink: "/products",
+      //       maxProducts: 4
+      //     },
+      //     styles: {},
+      //     state: {
+      //       key: "",
+      //       type: "",
+      //       initValue: ""
+      //     }
+      //   }
+      // },
       {
         sectionName: "HeroBanner",
         data: {
