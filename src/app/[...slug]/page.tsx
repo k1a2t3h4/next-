@@ -1,89 +1,7 @@
-import { GetObjectCommand } from '@aws-sdk/client-s3';
-import { r2Client } from '@/lib/r2';
+
 import { notFound } from 'next/navigation';
-import * as esbuild from 'esbuild';
 import React from 'react';
-import dynamic from 'next/dynamic';
-import ClientComponent from '../../context/ClientComponent';
-
-const R2_BUCKET_NAME_TSX = process.env.R2_BUCKET_NAME_TSX;
-const R2_BUCKET_NAME = process.env.R2_BUCKET_NAME;
-
-if (!R2_BUCKET_NAME_TSX || !R2_BUCKET_NAME) {
-  throw new Error('Missing required environment variables: R2_BUCKET_NAME_TSX and R2_BUCKET_NAME must be set');
-}
-async function getComponentFromR2(key: string) {
-  try {
-    const command = new GetObjectCommand({
-      Bucket: process.env.R2_BUCKET_NAME!,
-      Key: key,
-    });
-
-    const response = await r2Client.send(command);
-    const componentCode = await response.Body?.transformToString();
-    
-    if (!componentCode) {
-      throw new Error('Component code not found');
-    }
-
-    // Create a temporary file with the component code
-    const tempFile = `/tmp/${key}`;
-    const fs = require('fs');
-    fs.writeFileSync(tempFile, componentCode);
-
-    return tempFile;
-  } catch (error) {
-    console.error('Error loading component from R2:', error);
-    throw error;
-  }
-}
-
-function isClientComponent(code: string): boolean {
-  const firstLines = code.split('\n').slice(0, 5).map(line => line.trim());
-  return firstLines.includes(`'use client';`) || firstLines.includes(`"use client";`);
-}
-
-async function compileComponent(code: string): Promise<string> {
-  const compiled = await esbuild.transform(code, {
-    loader: 'tsx',
-    format: 'cjs',
-    target: 'es2020',
-  });
-
-  return compiled.code;
-}
-
-function evaluateComponent(code: string): React.ComponentType {
-  const module = { exports: {} as { default: React.ComponentType } };
-  // Conditionally import hooks only if client component
-  const requireShim = (mod: string) => {
-    if (mod === 'react') return require('react')
-    if (mod === 'next/link') return require('next/link');
-    if (mod === '../app/page') return require('../[...slug]/page');
-    throw new Error(`Cannot resolve module: ${mod}`);
-  };
-
-  const func = new Function('require', 'exports', 'module', code);
-  func(requireShim, module.exports, module);
-
-  return module.exports.default;
-}
-
-async function getRawComponentFromR2(key: string): Promise<string> {
-  const command = new GetObjectCommand({
-    Bucket: R2_BUCKET_NAME_TSX,
-    Key: key,
-  });
-
-  const response = await r2Client.send(command);
-  const componentCode = await response.Body?.transformToString();
-
-  if (!componentCode) throw new Error('Component code not found');
-  const responsehttp = await fetch(`https://pub-e9fe85ee4a054365808fe57dab43e678.r2.dev/${key}`);
-  const code = await responsehttp.text();
-  
-  return componentCode;
-}
+import {renderSection} from '../../utils/renderSection'
 // async function getPagesFromR2() {
 //   try {
 //     const command = new GetObjectCommand({
@@ -128,53 +46,7 @@ interface ComponentData {
   };
   sections: Section[];
 }
-interface ComponentProps {
-  data?: Record<string, any>;
-  sections?: Section[];
-}
-export async function renderSection(component: Section, idx: string) {
-try {
-  const key = `${component.sectionName}.tsx`;
 
-  // Step 1: Get raw source code
-  const rawCode = await getRawComponentFromR2(key);
-
-  // Step 2: Detect client component
-  const client = isClientComponent(rawCode);
-  if(client) {
-    return (
-      <div key={idx} className="section-container" suppressHydrationWarning>
-      <ClientComponent 
-        name={component.sectionName}
-        data={component.data}
-        index={idx}
-      />
-    </div>
-  )
-  } else {
-    // Step 3: Compile the raw code to JS
-    const compiledCode = await compileComponent(rawCode);
-    
-    // Step 4: Evaluate the compiled code with proper require shim
-    const Component = evaluateComponent(compiledCode)
-
-    // Step 5: Create dynamic wrapper with SSR option
-    const DynamicComponent = dynamic(
-      () => Promise.resolve(({ Component, data, sections }: { 
-        Component: React.ComponentType<ComponentProps>,
-        data?: Record<string, any>,
-        sections?: Section[],
-      }) => <Component data={data} sections={sections} />),
-      { ssr: true }
-    );
-    return (
-    <div key={idx} suppressHydrationWarning><DynamicComponent Component={Component} data={component.data} sections={component.sections}/></div>)
-  }
-} catch (err) {
-  console.error(`Failed to load component ${component.sectionName}:`, err);
-  return <div key={idx} suppressHydrationWarning>Error loading {component.sectionName}</div>;
-}
-}
 
 export default async function DynamicPage(props: PageProps) {
   const { params } = props;

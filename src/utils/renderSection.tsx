@@ -1,0 +1,153 @@
+import { GetObjectCommand } from '@aws-sdk/client-s3';
+import { r2Client } from '@/lib/r2';
+import dynamic from 'next/dynamic';
+import * as esbuild from 'esbuild';
+import React from 'react';
+import ClientComponent from '../context/ClientComponent';
+
+interface ComponentProps {
+  data?: {
+    builddata?: Record<string, any>;
+    styles?: Record<string, any>;
+    state?: {
+      key: string;
+      type: string;
+      initValue: any;
+    };
+  };
+  sections?: Section[];
+
+}
+const R2_BUCKET_NAME_TSX = process.env.R2_BUCKET_NAME_TSX;
+const R2_BUCKET_NAME = process.env.R2_BUCKET_NAME;
+
+if (!R2_BUCKET_NAME_TSX || !R2_BUCKET_NAME) {
+  throw new Error('Missing required environment variables: R2_BUCKET_NAME_TSX and R2_BUCKET_NAME must be set');
+}
+
+// Add these interfaces at the top of the file after the imports
+interface Section {
+  sectionName: string;
+  data: {
+    builddata?: Record<string, any>;
+    styles?: Record<string, any>;
+    state?: {
+      key: string;
+      type: string;
+      initValue: any;
+    };
+  };
+  sections?: Section[];
+}
+// Update the ClientComponent props
+// interface ClientComponentProps {
+//   name: string;
+//   data?: Record<string, any>;
+//   sections?: Section[];
+//   index: string;
+//   renderSection: (section: Section, idx: string) => Promise<JSX.Element>;
+// }
+
+// Load a .tsx file from R2 and return the raw code (not compiled)
+async function getRawComponentFromR2(key: string): Promise<string> {
+  const command = new GetObjectCommand({
+    Bucket: R2_BUCKET_NAME_TSX,
+    Key: key,
+  });
+
+  const response = await r2Client.send(command);
+  const componentCode = await response.Body?.transformToString();
+
+  if (!componentCode) throw new Error('Component code not found');
+  const responsehttp = await fetch(`https://pub-e9fe85ee4a054365808fe57dab43e678.r2.dev/${key}`);
+  const code = await responsehttp.text();
+  
+  return componentCode;
+}
+
+// Check if component source contains 'use client' directive at the top
+function isClientComponent(code: string): boolean {
+  const firstLines = code.split('\n').slice(0, 5).map(line => line.trim());
+  return firstLines.includes(`'use client';`) || firstLines.includes(`"use client";`);
+}
+
+// Compile TSX code to JS (CommonJS)
+async function compileComponent(code: string): Promise<string> {
+  const compiled = await esbuild.transform(code, {
+    loader: 'tsx',
+    format: 'cjs',
+    target: 'es2020',
+  });
+
+  return compiled.code;
+}
+
+// Evaluate compiled JS and return the default React component
+function evaluateComponent(code: string): React.ComponentType {
+  const module = { exports: {} as { default: React.ComponentType } };
+  // Conditionally import hooks only if client component
+  const requireShim = (mod: string) => {
+    if (mod === 'react') return require('react')
+    if (mod === 'next/link') return require('next/link');
+    if (mod === '../app/page') return require('../utils/renderSection');
+    throw new Error(`Cannot resolve module: ${mod}`);
+  };
+
+  const func = new Function('require', 'exports', 'module', code);
+  func(requireShim, module.exports, module);
+
+  return module.exports.default;
+}
+
+export async function renderSection(section: Section, idx: string) {
+  try {
+    const key = `${section.sectionName}.tsx`;
+
+    // Step 1: Get raw source code
+    const rawCode = await getRawComponentFromR2(key);
+
+    // Step 2: Detect client component
+    const client = isClientComponent(rawCode);
+    if (client) {
+      return (
+        <div key={idx} className="section-container" suppressHydrationWarning>
+          <ClientComponent 
+            name={section.sectionName}
+            data={section.data}
+            sections={section.sections}
+            index={idx}
+          />
+        </div>
+      );
+    } else {
+      // Step 3: Compile the raw code to JS
+      const compiledCode = await compileComponent(rawCode);
+      
+      // Step 4: Evaluate the compiled code with proper require shim
+      const Component = evaluateComponent(compiledCode);
+
+      // Step 5: Create dynamic wrapper with SSR option
+      const DynamicComponent = dynamic(
+        () => Promise.resolve(({ Component, data, sections}: { 
+          Component: React.ComponentType<ComponentProps>,
+          data?: Record<string, any>,
+          sections?: Section[],
+        }) => <Component data={data} sections={sections}/>),
+        { ssr: true }
+      );
+
+      return (
+        <div key={idx} className="section-container" suppressHydrationWarning>
+          <DynamicComponent
+            Component={Component}
+            data={section.data}
+            sections={section.sections}
+          />
+        </div>
+      );
+    }
+  } catch (err) {
+    console.error(`Failed to load component ${section.sectionName}:`, err);
+    return <div key={idx} suppressHydrationWarning>Error loading {section.sectionName}</div>;
+  }
+}
