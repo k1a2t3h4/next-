@@ -1,5 +1,4 @@
-import { GetObjectCommand } from '@aws-sdk/client-s3';
-import { r2Client } from '@/lib/r2';
+
 import dynamic from 'next/dynamic';
 import * as esbuild from 'esbuild';
 import React from 'react';
