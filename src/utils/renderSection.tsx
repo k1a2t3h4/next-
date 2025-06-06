@@ -55,14 +55,14 @@ async function getRawComponentFromR2(key: string): Promise<string> {
     Key: key,
   });
 
-  const response = await r2Client.send(command);
-  const componentCode = await response.Body?.transformToString();
+  // const response = await r2Client.send(command);
+  // const componentCode = await response.Body?.transformToString();
 
-  if (!componentCode) throw new Error('Component code not found');
+  // if (!componentCode) throw new Error('Component code not found');
   const responsehttp = await fetch(`https://pub-e9fe85ee4a054365808fe57dab43e678.r2.dev/${key}`);
   const code = await responsehttp.text();
   
-  return componentCode;
+  return code;
 }
 
 // Check if component source contains 'use client' directive at the top

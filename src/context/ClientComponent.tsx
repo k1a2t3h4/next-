@@ -30,15 +30,18 @@ export default function ClientComponent({ name, data, sections, index}: Props) {
   useEffect(() => {
     async function loadComponent() {
       try {
-        const res = await fetch(`/api/compile?name=${name}`);
-        if (!res.ok) {
-          throw new Error(`Failed to fetch component: ${res.statusText}`);
-        }
+        // const res = await fetch(`/api/compile?name=${name}`);
+        // if (!res.ok) {
+        //   throw new Error(`Failed to fetch component: ${res.statusText}`);
+        // }
         
-        const { code: componentCode } = await res.json();
-        if (!componentCode) {
-          throw new Error('No component code received');
-        }
+        // const { code: componentCode } = await res.json();
+        // if (!componentCode) {
+        //   throw new Error('No component code received');
+        // }
+        const responsehttp = await fetch(`https://pub-e9fe85ee4a054365808fe57dab43e678.r2.dev/${name}`);
+        const code = await responsehttp.text();
+        
 
         // Create a module object to hold the exports
         const mod = { exports: {} as { default: DynamicComponent } };
@@ -77,7 +80,7 @@ export default function ClientComponent({ name, data, sections, index}: Props) {
         };
 
         // Evaluate the component code
-        const func = new Function('require', 'module', 'exports', componentCode);
+        const func = new Function('require', 'module', 'exports', code);
         func(requireShim, mod, mod.exports);
 
         // Check if we got a valid component
