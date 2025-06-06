@@ -39,7 +39,7 @@ export default function ClientComponent({ name, data, sections, index}: Props) {
         // if (!componentCode) {
         //   throw new Error('No component code received');
         // }
-        const responsehttp = await fetch(`https://pub-e9fe85ee4a054365808fe57dab43e678.r2.dev/${name}`);
+        const responsehttp = await fetch(`https://pub-e9fe85ee4a054365808fe57dab43e678.r2.dev/${name}.tsx`);
         const code = await responsehttp.text();
         
 

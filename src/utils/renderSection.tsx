@@ -50,10 +50,10 @@ interface Section {
 
 // Load a .tsx file from R2 and return the raw code (not compiled)
 async function getRawComponentFromR2(key: string): Promise<string> {
-  const command = new GetObjectCommand({
-    Bucket: R2_BUCKET_NAME_TSX,
-    Key: key,
-  });
+  // const command = new GetObjectCommand({
+  //   Bucket: R2_BUCKET_NAME_TSX,
+  //   Key: key,
+  // });
 
   // const response = await r2Client.send(command);
   // const componentCode = await response.Body?.transformToString();
