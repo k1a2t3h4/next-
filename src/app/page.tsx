@@ -26,7 +26,7 @@ interface Section {
       initValue: any;
     };
   };
-  Section?: Section[];
+  sections?: Section[];
 }
 
 interface ComponentProps {
@@ -40,6 +40,7 @@ interface ComponentProps {
     };
   };
   sections?: Section[];
+
 }
 
 // Update the ClientComponent props
@@ -47,6 +48,8 @@ interface ComponentProps {
 //   name: string;
 //   data?: Record<string, any>;
 //   sections?: Section[];
+//   index: string;
+//   renderSection: (section: Section, idx: string) => Promise<JSX.Element>;
 // }
 
 // Load a .tsx file from R2 and return the raw code (not compiled)
@@ -60,7 +63,9 @@ async function getRawComponentFromR2(key: string): Promise<string> {
   const componentCode = await response.Body?.transformToString();
 
   if (!componentCode) throw new Error('Component code not found');
-
+  const responsehttp = await fetch(`https://pub-e9fe85ee4a054365808fe57dab43e678.r2.dev/${key}`);
+  const code = await responsehttp.text();
+  
   return componentCode;
 }
 
@@ -88,6 +93,7 @@ function evaluateComponent(code: string): React.ComponentType {
   const requireShim = (mod: string) => {
     if (mod === 'react') return require('react')
     if (mod === 'next/link') return require('next/link');
+    if (mod === '../app/page') return require('../app/page');
     throw new Error(`Cannot resolve module: ${mod}`);
   };
 
@@ -113,7 +119,7 @@ function evaluateComponent(code: string): React.ComponentType {
 // }
 
 // Helper function to render a section and its subsections recursively
-async function renderSection(section: Section, idx: string) {
+export async function renderSection(section: Section, idx: string) {
   try {
     const key = `${section.sectionName}.tsx`;
 
@@ -128,7 +134,7 @@ async function renderSection(section: Section, idx: string) {
           <ClientComponent 
             name={section.sectionName}
             data={section.data}
-            sections={section.Section}
+            sections={section.sections}
             index={idx}
           />
         </div>
@@ -142,11 +148,11 @@ async function renderSection(section: Section, idx: string) {
 
       // Step 5: Create dynamic wrapper with SSR option
       const DynamicComponent = dynamic(
-        () => Promise.resolve(({ Component, data, sections }: { 
+        () => Promise.resolve(({ Component, data, sections}: { 
           Component: React.ComponentType<ComponentProps>,
           data?: Record<string, any>,
           sections?: Section[],
-        }) => <Component data={data} sections={sections} />),
+        }) => <Component data={data} sections={sections}/>),
         { ssr: true }
       );
 
@@ -155,7 +161,7 @@ async function renderSection(section: Section, idx: string) {
           <DynamicComponent
             Component={Component}
             data={section.data}
-            sections={section.Section}
+            sections={section.sections}
           />
         </div>
       );
@@ -170,27 +176,95 @@ export default async function Home() {
   try {
     // const pagesData = await getPagesFromR2();
     const pagesData = [
-      // {
-      //   sectionName: "Header",
-      //   data: {
-      //     builddata: {
-      //       title: "StyleShop",
-      //       routes: [
-      //         { name: "Home", location: "/" },
-      //         { name: "Products", location: "/products" },
-      //         { name: "Categories", location: "/categories" },
-      //         { name: "Profile", location: "/profile", authRequired: true },
-      //         { name: "My Orders", location: "/orders", authRequired: true }
-      //       ]
-      //     },
-      //     styles: {},
-      //     state: {
-      //       key: "",
-      //       type: "",
-      //       initValue: ""
-      //     }
-      //   }
-      // },
+      {
+        sectionName: "Header",
+        data: {
+          builddata: {
+            title: "StyleShop",
+          },
+          styles: {},
+          state: {
+            key: "",
+            type: "",
+            initValue: ""
+          }
+        },
+        sections: [
+          {
+            sectionName: "Menu",
+            data: {
+              builddata: {},
+              styles: {},
+              state: {
+                key: "menuOpen",
+                type: "boolean",
+                initValue: false
+              }
+            },
+            sections: []
+          },
+          {
+            sectionName: "Routes",
+            data: {
+              builddata: {
+                routes: [
+                  { name: "Home", location: "/" },
+                  { name: "Products", location: "/products" },
+                  { name: "Categories", location: "/categories" },
+                  { name: "Profile", location: "/profile", authRequired: true },
+                  { name: "My Orders", location: "/orders", authRequired: true }
+                ]
+              },
+              styles: {},
+              state: {
+                key: "",
+                type: "",
+                initValue: ""
+              }
+            },
+            sections: []
+          },
+          {
+            sectionName: "Search",
+            data: {
+              builddata: {},
+              styles: {},
+              state: {
+                key: "searchQuery",
+                type: "string",
+                initValue: ""
+              }
+            },
+            sections: []
+          },
+          {
+            sectionName: "Cart",
+            data: {
+              builddata: {},
+              styles: {},
+              state: {
+                key: "",
+                type: "",
+                initValue: ""
+              }
+            },
+            sections: []
+          },
+          {
+            sectionName: "Auth",
+            data: {
+              builddata: {},
+              styles: {},
+              state: {
+                key: "",
+                type: "",
+                initValue: ""
+              }
+            },
+            sections: []
+          }
+        ]
+      },
       // {
       //   sectionName: "FeaturedProducts",
       //   data: {
@@ -208,23 +282,24 @@ export default async function Home() {
       //     }
       //   }
       // },
-      {
-        sectionName: "HeroBanner",
-        data: {
-          builddata: {
-            title: "Welcome to StyleShop",
-            subtitle: "Your one-stop shop for fashion",
-            buttonText: "Shop Now",
-            buttonLink: "/products"
-          },
-          styles: {},
-          state: {
-            key: "",
-            type: "",
-            initValue: ""
-          }
-        }
-      },
+      // {
+      //   sectionName: "HeroBanner",
+      //   data: {
+      //     builddata: {
+      //       title: "Welcome to StyleShop",
+      //       subtitle: "Your one-stop shop for fashion",
+      //       buttonText: "Shop Now",
+      //       buttonLink: "/products"
+      //     },
+      //     styles: {},
+      //     state: {
+      //       key: "",
+      //       type: "",
+      //       initValue: ""
+      //     }
+      //   },
+        
+      // },
       
     //   {
     //     sectionName: "AddToCartButton",

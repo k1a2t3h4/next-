@@ -1,7 +1,6 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import * as ReactIconsBS from 'react-icons/bs';
 
 interface Section {
   sectionName: string;
@@ -14,15 +13,17 @@ interface Props {
   data?: Record<string, any>;
   sections?: Section[];
   index?: string;
+
 }
 
 type DynamicComponent = React.FC<{
   data?: Record<string, any>;
   sections?: Section[];
   index?: string;
+
 }>;
 
-export default function ClientComponent({ name, data, sections, index }: Props) {
+export default function ClientComponent({ name, data, sections, index}: Props) {
   const [Component, setComponent] = useState<DynamicComponent | null>(null);
   const [error, setError] = useState<string | null>(null);
 
@@ -67,6 +68,8 @@ export default function ClientComponent({ name, data, sections, index }: Props) 
               return require('next/navigation');
             case '@mui/material':
               return require('@mui/material');
+            case '../app/page.':
+              return require('../app/page')
             default:
               console.warn(`Unknown module requested: ${modName}`);
               return {};
