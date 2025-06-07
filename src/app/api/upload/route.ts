@@ -36,8 +36,8 @@ export async function POST(request: Request) {
     // Transform the TSX code into a JS bundle
     const result = await esbuild.transform(code, {
       loader: 'tsx',
-      target: 'esnext',
-      format: 'esm',
+      target: 'es2020',
+      format: 'cjs',
     });
 
     const jsCode = result.code;

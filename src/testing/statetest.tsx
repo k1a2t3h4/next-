@@ -11,8 +11,6 @@ export default function StateValueViewer() {
   return (
     <div className="p-4">
       <h1 className="text-2xl font-bold mb-4">State Value Viewer</h1>
-
-      
         {getStateByKey("abcd") && (
           <div className="mt-4 p-4 bg-gray-50 rounded">
             <h2 className="text-xl font-semibold mb-2">State Value Details</h2>

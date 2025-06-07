@@ -1,6 +1,4 @@
-
 import dynamic from 'next/dynamic';
-import * as esbuild from 'esbuild';
 import React from 'react';
 import ClientComponent from '../context/ClientComponent';
 
@@ -17,13 +15,6 @@ interface ComponentProps {
   sections?: Section[];
 
 }
-const R2_BUCKET_NAME_TSX = process.env.R2_BUCKET_NAME_TSX;
-const R2_BUCKET_NAME = process.env.R2_BUCKET_NAME;
-
-if (!R2_BUCKET_NAME_TSX || !R2_BUCKET_NAME) {
-  throw new Error('Missing required environment variables: R2_BUCKET_NAME_TSX and R2_BUCKET_NAME must be set');
-}
-
 // Add these interfaces at the top of the file after the imports
 interface Section {
   sectionName: string;
@@ -37,6 +28,7 @@ interface Section {
     };
   };
   sections?: Section[];
+  client?: string;
 }
 // Update the ClientComponent props
 // interface ClientComponentProps {
@@ -58,28 +50,16 @@ async function getRawComponentFromR2(key: string): Promise<string> {
   // const componentCode = await response.Body?.transformToString();
 
   // if (!componentCode) throw new Error('Component code not found');
-  const responsehttp = await fetch(`https://pub-e9fe85ee4a054365808fe57dab43e678.r2.dev/${key}`);
+  const responsehttp = await fetch(`https://pub-aac58bb0a497454096a1fcf0b6aa06cc.r2.dev/${key}`);
   const code = await responsehttp.text();
   
   return code;
 }
 
 // Check if component source contains 'use client' directive at the top
-function isClientComponent(code: string): boolean {
-  const firstLines = code.split('\n').slice(0, 5).map(line => line.trim());
-  return firstLines.includes(`'use client';`) || firstLines.includes(`"use client";`);
-}
 
 // Compile TSX code to JS (CommonJS)
-async function compileComponent(code: string): Promise<string> {
-  const compiled = await esbuild.transform(code, {
-    loader: 'tsx',
-    format: 'cjs',
-    target: 'es2020',
-  });
 
-  return compiled.code;
-}
 
 // Evaluate compiled JS and return the default React component
 function evaluateComponent(code: string): React.ComponentType {
@@ -89,9 +69,9 @@ function evaluateComponent(code: string): React.ComponentType {
     if (mod === 'react') return require('react')
     if (mod === 'next/link') return require('next/link');
     if (mod === '../app/page') return require('../utils/renderSection');
+    if (mod === '../utils/renderSection') return require('../utils/renderSection');
     throw new Error(`Cannot resolve module: ${mod}`);
   };
-
   const func = new Function('require', 'exports', 'module', code);
   func(requireShim, module.exports, module);
 
@@ -100,14 +80,9 @@ function evaluateComponent(code: string): React.ComponentType {
 
 export async function renderSection(section: Section, idx: string) {
   try {
-    const key = `${section.sectionName}.tsx`;
 
-    // Step 1: Get raw source code
-    const rawCode = await getRawComponentFromR2(key);
-
-    // Step 2: Detect client component
-    const client = isClientComponent(rawCode);
-    if (client) {
+    // Step 2: Check if it's a client component based on the client property
+    if (section.client === "yes") {
       return (
         <div key={idx} className="section-container" suppressHydrationWarning>
           <ClientComponent 
@@ -120,10 +95,13 @@ export async function renderSection(section: Section, idx: string) {
       );
     } else {
       // Step 3: Compile the raw code to JS
-      const compiledCode = await compileComponent(rawCode);
-      
+      const key = `${section.sectionName}.js`;
+
+      // Step 1: Get raw source code
+      const rawCode = await getRawComponentFromR2(key);
+
       // Step 4: Evaluate the compiled code with proper require shim
-      const Component = evaluateComponent(compiledCode);
+      const Component = evaluateComponent(rawCode);
 
       // Step 5: Create dynamic wrapper with SSR option
       const DynamicComponent = dynamic(

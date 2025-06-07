@@ -1,7 +1,5 @@
-'use client';
-
 import React from 'react';
-import { Button, Card, CardContent, Typography } from '@mui/material';
+
 import { ShoppingCart, Trash2, Plus, Minus } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useCart } from '../CartWrapper';
@@ -52,14 +50,13 @@ const CartPage = ({ data }: CartPageProps) => {
                 <div className="p-6">
                   <div className="flex justify-between items-center pb-4 border-b">
                     <h2 className="text-xl font-semibold">Cart Items ({totalItems})</h2>
-                    <Button 
-                      variant="outlined" 
-                      size="small" 
+                    <button 
+                      
                       onClick={clearCart}
-                      startIcon={<Trash2 className="h-4 w-4" />}
+                      
                     >
                       Clear Cart
-                    </Button>
+                    </button>
                   </div>
                   
                   {items.map((item: any) => (
@@ -94,35 +91,32 @@ const CartPage = ({ data }: CartPageProps) => {
                         
                         <div className="flex justify-between items-center">
                           <div className="flex items-center">
-                            <Button
-                              variant="outlined"
-                              size="small"
+                            <button
+                             
                               className="min-w-0 px-2"
                               onClick={() => updateQuantity(item.product.id, item.quantity - 1)}
                               disabled={item.quantity <= 1}
                             >
                               <Minus className="h-3 w-3" />
-                            </Button>
+                            </button>
                             <span className="w-10 text-center">{item.quantity}</span>
-                            <Button
-                              variant="outlined"
-                              size="small"
+                            <button
+                            
                               className="min-w-0 px-2"
                               onClick={() => updateQuantity(item.product.id, item.quantity + 1)}
                               disabled={item.quantity >= item.product.inventory}
                             >
                               <Plus className="h-3 w-3" />
-                            </Button>
+                            </button>
                           </div>
                           
-                          <Button
-                            variant="outlined"
-                            size="small"
+                          <button
+                          
                             onClick={() => removeFromCart(item.product.id)}
-                            startIcon={<Trash2 className="h-4 w-4" />}
+                          
                           >
                             Remove
-                          </Button>
+                          </button>
                         </div>
                       </div>
                     </div>
@@ -132,11 +126,11 @@ const CartPage = ({ data }: CartPageProps) => {
             </div>
             
             <div>
-              <Card>
-                <CardContent>
-                  <Typography variant="h6" component="h2">{builddata?.orderSummaryTitle || "Order Summary"}</Typography>
-                </CardContent>
-                <CardContent className="space-y-4">
+              <div>
+                <div>
+                  <h1>{builddata?.orderSummaryTitle || "Order Summary"}</h1>
+                </div>
+                <div className="space-y-4">
                   <div className="flex justify-between">
                     <span>{builddata?.subtotalText || `Subtotal (${totalItems} items)`}</span>
                     <span>${totalPrice.toFixed(2)}</span>
@@ -149,18 +143,16 @@ const CartPage = ({ data }: CartPageProps) => {
                     <span>{builddata?.totalText || "Total"}</span>
                     <span>${totalPrice.toFixed(2)}</span>
                   </div>
-                </CardContent>
-                <CardContent>
-                  <Button 
-                    variant="contained"
-                    fullWidth
-                    size="large"
+                </div>
+                <div>
+                  <button 
+                    
                     onClick={() => router.push('/checkout')}
                   >
                     {builddata?.checkoutButtonText || "Proceed to Checkout"}
-                  </Button>
-                </CardContent>
-              </Card>
+                  </button>
+                </div>
+              </div>
             </div>
           </div>
         ) : (
@@ -172,13 +164,13 @@ const CartPage = ({ data }: CartPageProps) => {
             <p className="mt-2 text-gray-500">
               {builddata?.emptyCartMessage || "Add items to your cart to see them here."}
             </p>
-            <Button 
-              variant="contained"
+            <button 
+              
               className="mt-6" 
               onClick={() => router.push(builddata?.continueShoppingLink || '/products')}
             >
               {builddata?.continueShoppingText || "Continue Shopping"}
-            </Button>
+            </button>
           </div>
         )}
       </div>
@@ -186,4 +178,4 @@ const CartPage = ({ data }: CartPageProps) => {
   );
 };
 
-module.exports.default = CartPage; 
+export default CartPage; 

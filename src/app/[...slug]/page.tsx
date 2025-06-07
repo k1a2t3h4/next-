@@ -1,4 +1,3 @@
-
 import { notFound } from 'next/navigation';
 import React from 'react';
 import {renderSection} from '../../utils/renderSection'
@@ -73,6 +72,7 @@ export default async function DynamicPage(props: PageProps) {
           sections: [
             {
               sectionName: "Menu",
+              client: "yes",
               data: {
                 builddata: {},
                 styles: {},
@@ -86,6 +86,7 @@ export default async function DynamicPage(props: PageProps) {
             },
             {
               sectionName: "Routes",
+              client: "yes",
               data: {
                 builddata: {
                   routes: [
@@ -107,6 +108,7 @@ export default async function DynamicPage(props: PageProps) {
             },
             {
               sectionName: "Search",
+              client: "yes",
               data: {
                 builddata: {},
                 styles: {},
@@ -120,6 +122,7 @@ export default async function DynamicPage(props: PageProps) {
             },
             {
               sectionName: "Cart",
+              client: "yes",
               data: {
                 builddata: {},
                 styles: {},
@@ -133,6 +136,7 @@ export default async function DynamicPage(props: PageProps) {
             },
             {
               sectionName: "Auth",
+              client: "yes",
               data: {
                 builddata: {},
                 styles: {},
@@ -164,6 +168,7 @@ export default async function DynamicPage(props: PageProps) {
           sections: [
             {
               sectionName: "Menu",
+              client: "yes",
               data: {
                 builddata: {},
                 styles: {},
@@ -177,6 +182,7 @@ export default async function DynamicPage(props: PageProps) {
             },
             {
               sectionName: "Routes",
+              client: "yes",
               data: {
                 builddata: {
                   routes: [
@@ -198,6 +204,7 @@ export default async function DynamicPage(props: PageProps) {
             },
             {
               sectionName: "Search",
+              client: "yes",
               data: {
                 builddata: {},
                 styles: {},
@@ -211,6 +218,7 @@ export default async function DynamicPage(props: PageProps) {
             },
             {
               sectionName: "Cart",
+              client: "yes",
               data: {
                 builddata: {},
                 styles: {},
@@ -224,6 +232,7 @@ export default async function DynamicPage(props: PageProps) {
             },
             {
               sectionName: "Auth",
+              client: "yes",
               data: {
                 builddata: {},
                 styles: {},
@@ -255,6 +264,7 @@ export default async function DynamicPage(props: PageProps) {
           sections: [
             {
               sectionName: "Menu",
+              client: "yes",
               data: {
                 builddata: {},
                 styles: {},
@@ -268,6 +278,7 @@ export default async function DynamicPage(props: PageProps) {
             },
             {
               sectionName: "Routes",
+              client: "yes",
               data: {
                 builddata: {
                   routes: [
@@ -289,6 +300,7 @@ export default async function DynamicPage(props: PageProps) {
             },
             {
               sectionName: "Search",
+              client: "yes",
               data: {
                 builddata: {},
                 styles: {},
@@ -302,6 +314,7 @@ export default async function DynamicPage(props: PageProps) {
             },
             {
               sectionName: "Cart",
+              client: "yes",
               data: {
                 builddata: {},
                 styles: {},
@@ -315,6 +328,7 @@ export default async function DynamicPage(props: PageProps) {
             },
             {
               sectionName: "Auth",
+              client: "yes",
               data: {
                 builddata: {},
                 styles: {},
@@ -346,6 +360,7 @@ export default async function DynamicPage(props: PageProps) {
           sections: [
             {
               sectionName: "Menu",
+              client: "yes",
               data: {
                 builddata: {},
                 styles: {},
@@ -359,6 +374,7 @@ export default async function DynamicPage(props: PageProps) {
             },
             {
               sectionName: "Routes",
+              client: "yes",
               data: {
                 builddata: {
                   routes: [
@@ -380,6 +396,7 @@ export default async function DynamicPage(props: PageProps) {
             },
             {
               sectionName: "Search",
+              client: "yes",
               data: {
                 builddata: {},
                 styles: {},
@@ -393,6 +410,7 @@ export default async function DynamicPage(props: PageProps) {
             },
             {
               sectionName: "Cart",
+              client: "yes",
               data: {
                 builddata: {},
                 styles: {},
@@ -406,6 +424,7 @@ export default async function DynamicPage(props: PageProps) {
             },
             {
               sectionName: "Auth",
+              client: "yes",
               data: {
                 builddata: {},
                 styles: {},
@@ -437,6 +456,7 @@ export default async function DynamicPage(props: PageProps) {
           sections: [
             {
               sectionName: "Menu",
+              client: "yes",
               data: {
                 builddata: {},
                 styles: {},
@@ -450,6 +470,7 @@ export default async function DynamicPage(props: PageProps) {
             },
             {
               sectionName: "Routes",
+              client: "yes",
               data: {
                 builddata: {
                   routes: [
@@ -471,6 +492,7 @@ export default async function DynamicPage(props: PageProps) {
             },
             {
               sectionName: "Search",
+              client: "yes",
               data: {
                 builddata: {},
                 styles: {},
@@ -484,6 +506,7 @@ export default async function DynamicPage(props: PageProps) {
             },
             {
               sectionName: "Cart",
+              client: "yes",
               data: {
                 builddata: {},
                 styles: {},
@@ -497,6 +520,7 @@ export default async function DynamicPage(props: PageProps) {
             },
             {
               sectionName: "Auth",
+              client: "yes",
               data: {
                 builddata: {},
                 styles: {},
@@ -509,22 +533,7 @@ export default async function DynamicPage(props: PageProps) {
               sections: []
             }
           ]
-        },
-        {
-          sectionName: "productlist",
-          data: {
-            builddata: {
-              title: "Welcome to Login Page",
-              success:"ready to shop"
-            },
-            styles: {},
-            state: {
-              key: "",
-              type: "",
-              initValue: ""
-            }
-          }
-        },
+        }
       ],
       "products/product1/detail": [
         {
@@ -543,6 +552,7 @@ export default async function DynamicPage(props: PageProps) {
           sections: [
             {
               sectionName: "Menu",
+              client: "yes",
               data: {
                 builddata: {},
                 styles: {},
@@ -556,6 +566,7 @@ export default async function DynamicPage(props: PageProps) {
             },
             {
               sectionName: "Routes",
+              client: "yes",
               data: {
                 builddata: {
                   routes: [
@@ -577,6 +588,7 @@ export default async function DynamicPage(props: PageProps) {
             },
             {
               sectionName: "Search",
+              client: "yes",
               data: {
                 builddata: {},
                 styles: {},
@@ -590,6 +602,7 @@ export default async function DynamicPage(props: PageProps) {
             },
             {
               sectionName: "Cart",
+              client: "yes",
               data: {
                 builddata: {},
                 styles: {},
@@ -603,6 +616,7 @@ export default async function DynamicPage(props: PageProps) {
             },
             {
               sectionName: "Auth",
+              client: "yes",
               data: {
                 builddata: {},
                 styles: {},
@@ -634,6 +648,7 @@ export default async function DynamicPage(props: PageProps) {
           sections: [
             {
               sectionName: "Menu",
+              client: "yes",
               data: {
                 builddata: {},
                 styles: {},
@@ -647,6 +662,7 @@ export default async function DynamicPage(props: PageProps) {
             },
             {
               sectionName: "Routes",
+              client: "yes",
               data: {
                 builddata: {
                   routes: [
@@ -668,6 +684,7 @@ export default async function DynamicPage(props: PageProps) {
             },
             {
               sectionName: "Search",
+              client: "yes",
               data: {
                 builddata: {},
                 styles: {},
@@ -681,6 +698,7 @@ export default async function DynamicPage(props: PageProps) {
             },
             {
               sectionName: "Cart",
+              client: "yes",
               data: {
                 builddata: {},
                 styles: {},
@@ -694,6 +712,7 @@ export default async function DynamicPage(props: PageProps) {
             },
             {
               sectionName: "Auth",
+              client: "yes",
               data: {
                 builddata: {},
                 styles: {},
@@ -709,6 +728,7 @@ export default async function DynamicPage(props: PageProps) {
         },
         {
           sectionName: "CartPage",
+          client: "yes",
           data: {
             builddata: {
               title: "Shopping Cart",
@@ -766,6 +786,7 @@ export default async function DynamicPage(props: PageProps) {
           sections: [
             {
               sectionName: "Menu",
+              client: "yes",
               data: {
                 builddata: {},
                 styles: {},
@@ -779,6 +800,7 @@ export default async function DynamicPage(props: PageProps) {
             },
             {
               sectionName: "Routes",
+              client: "yes",
               data: {
                 builddata: {
                   routes: [
@@ -800,6 +822,7 @@ export default async function DynamicPage(props: PageProps) {
             },
             {
               sectionName: "Search",
+              client: "yes",
               data: {
                 builddata: {},
                 styles: {},
@@ -813,6 +836,7 @@ export default async function DynamicPage(props: PageProps) {
             },
             {
               sectionName: "Cart",
+              client: "yes",
               data: {
                 builddata: {},
                 styles: {},
@@ -826,6 +850,7 @@ export default async function DynamicPage(props: PageProps) {
             },
             {
               sectionName: "Auth",
+              client: "yes",
               data: {
                 builddata: {},
                 styles: {},
@@ -841,6 +866,7 @@ export default async function DynamicPage(props: PageProps) {
         },
         {
           sectionName: "LoginPage",
+          client: "yes",
           data: {
             builddata: {
               title: "Welcome to Login Page",
@@ -872,6 +898,7 @@ export default async function DynamicPage(props: PageProps) {
           sections: [
             {
               sectionName: "Menu",
+              client: "yes",
               data: {
                 builddata: {},
                 styles: {},
@@ -885,6 +912,7 @@ export default async function DynamicPage(props: PageProps) {
             },
             {
               sectionName: "Routes",
+              client: "yes",
               data: {
                 builddata: {
                   routes: [
@@ -906,6 +934,7 @@ export default async function DynamicPage(props: PageProps) {
             },
             {
               sectionName: "Search",
+              client: "yes",
               data: {
                 builddata: {},
                 styles: {},
@@ -919,6 +948,7 @@ export default async function DynamicPage(props: PageProps) {
             },
             {
               sectionName: "Cart",
+              client: "yes",
               data: {
                 builddata: {},
                 styles: {},
@@ -932,6 +962,7 @@ export default async function DynamicPage(props: PageProps) {
             },
             {
               sectionName: "Auth",
+              client: "yes",
               data: {
                 builddata: {},
                 styles: {},

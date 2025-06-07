@@ -27,15 +27,8 @@ export default function ClientComponent({ name, data, sections, index}: Props) {
   useEffect(() => {
     async function loadComponent() {
       try {
-        const res = await fetch(`/api/compile?name=${name}`);
-        if (!res.ok) {
-          throw new Error(`Failed to fetch component: ${res.statusText}`);
-        }
-        
-        const { code: componentCode } = await res.json();
-        if (!componentCode) {
-          throw new Error('No component code received');
-        }
+        const response = await fetch(`https://pub-aac58bb0a497454096a1fcf0b6aa06cc.r2.dev/${name}.js`);
+        const code = await response.text();
 
         // Create a module object to hold the exports
         const mod = { exports: {} as { default: DynamicComponent } };
@@ -53,6 +46,8 @@ export default function ClientComponent({ name, data, sections, index}: Props) {
               return require('../app/FilterWrapper');
             case '../app/DynamicStateWrapper':
               return require('../app/DynamicStateWrapper');
+            case '../utils/renderSection':
+              return require('../utils/renderSection');
             case 'react-icons/ai':
               return require('react-icons/ai');
             case 'lucide-react':
@@ -62,11 +57,12 @@ export default function ClientComponent({ name, data, sections, index}: Props) {
             case '@mui/x-tree-view':
               return require('@mui/x-tree-view');
             case 'next/navigation':
-              return require('next/navigation');
+              return require('next/navigation'); 
+            case 'framer-motion':
+              return require('framer-motion'); 
             case '@mui/material':
-              return require('@mui/material');
-            case '../app/page.':
-              return require('../app/page')
+              const Mui = require('@mui/material');
+              return Mui;
             default:
               console.warn(`Unknown module requested: ${modName}`);
               return {};
@@ -74,7 +70,7 @@ export default function ClientComponent({ name, data, sections, index}: Props) {
         };
 
         // Evaluate the component code
-        const func = new Function('require', 'module', 'exports', componentCode);
+        const func = new Function('require', 'module', 'exports', code);
         func(requireShim, mod, mod.exports);
 
         // Check if we got a valid component
