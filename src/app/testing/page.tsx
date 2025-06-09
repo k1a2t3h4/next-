@@ -1,5 +1,5 @@
 'use client'
-import { useEffect } from 'react';
+import React from 'react';
 import { Menu, X } from 'lucide-react';
 
 const topics = {
@@ -14,7 +14,7 @@ const topics = {
 type TopicKey = keyof typeof topics;
 
 const Header = () => {
-  useEffect(() => {
+  React.useEffect(() => {
     // Desktop hover dropdown
     document.querySelectorAll('[data-dropdown]').forEach((item) => {
       item.addEventListener('mouseenter', () => {
@@ -74,7 +74,7 @@ const Header = () => {
   const topicNames = Object.keys(topics) as TopicKey[];
 
   return (
-    <header className="bg-white shadow-md fixed top-0 w-full z-50">
+    <header className="bg-white shadow-md ">
       <div className="flex justify-between items-center px-4 sm:px-8 py-3">
         {/* Mobile menu button */}
         <button id="mobileMenuBtn" className="sm:hidden">
@@ -82,7 +82,7 @@ const Header = () => {
         </button>
 
         <h1 className="text-xl font-bold">ShopBrand</h1>
-
+        
         {/* Desktop Nav */}
         <nav className="hidden sm:flex gap-6">
           {topicNames.map((topic) => (

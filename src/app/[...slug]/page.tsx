@@ -150,6 +150,22 @@ export default async function DynamicPage(props: PageProps) {
             }
           ]
         },
+        {
+          sectionName: "Testing",
+          client: "yes",
+          data: {
+            builddata: {
+              title: "StyleShop",
+            },
+            styles: {},
+            state: {
+              key: "",
+              type: "",
+              initValue: ""
+            }
+          },
+          sections:[]
+        },
       ],
       "not-found": [
         {
@@ -245,6 +261,22 @@ export default async function DynamicPage(props: PageProps) {
               sections: []
             }
           ]
+        },
+        {
+          sectionName: "Testing",
+          client: "yes",
+          data: {
+            builddata: {
+              title: "StyleShop",
+            },
+            styles: {},
+            state: {
+              key: "",
+              type: "",
+              initValue: ""
+            }
+          },
+          sections:[]
         },
       ],
       "blog": [
@@ -342,6 +374,22 @@ export default async function DynamicPage(props: PageProps) {
             }
           ]
         },
+        {
+          sectionName: "Testing",
+          client: "yes",
+          data: {
+            builddata: {
+              title: "StyleShop",
+            },
+            styles: {},
+            state: {
+              key: "",
+              type: "",
+              initValue: ""
+            }
+          },
+          sections:[]
+        },
       ],
       "categories": [
         {
@@ -436,6 +484,45 @@ export default async function DynamicPage(props: PageProps) {
               },
               sections: []
             }
+          ]
+        },
+        {
+          sectionName: "Testing",
+          client: "yes",
+          data: {
+            builddata: {
+              title: "StyleShop",
+            },
+            styles: {},
+            state: {
+              key: "",
+              type: "",
+              initValue: ""
+            }
+          },
+          sections:[
+            {
+              sectionName: "Routes",
+              client: "yes",
+              data: {
+                builddata: {
+                  routes: [
+                    { name: "Home", location: "/" },
+                    { name: "Products", location: "/products" },
+                    { name: "Categories", location: "/categories" },
+                    { name: "Profile", location: "/profile", authRequired: true },
+                    { name: "My Orders", location: "/orders", authRequired: true }
+                  ]
+                },
+                styles: {},
+                state: {
+                  key: "",
+                  type: "",
+                  initValue: ""
+                }
+              },
+              sections: []
+            },
           ]
         },
       ],
@@ -533,7 +620,46 @@ export default async function DynamicPage(props: PageProps) {
               sections: []
             }
           ]
-        }
+        },
+        {
+          sectionName: "Testing",
+          client: "yes",
+          data: {
+            builddata: {
+              title: "StyleShop",
+            },
+            styles: {},
+            state: {
+              key: "",
+              type: "",
+              initValue: ""
+            }
+          },
+          sections:[
+            {
+              sectionName: "Routes",
+              client: "yes",
+              data: {
+                builddata: {
+                  routes: [
+                    { name: "Home", location: "/" },
+                    { name: "Products", location: "/products" },
+                    { name: "Categories", location: "/categories" },
+                    { name: "Profile", location: "/profile", authRequired: true },
+                    { name: "My Orders", location: "/orders", authRequired: true }
+                  ]
+                },
+                styles: {},
+                state: {
+                  key: "",
+                  type: "",
+                  initValue: ""
+                }
+              },
+              sections: []
+            },
+          ]
+        },
       ],
       "products/product1/detail": [
         {
@@ -632,6 +758,7 @@ export default async function DynamicPage(props: PageProps) {
         },
       ],
       "cart": [
+        
         {
           sectionName: "Header",
           data: {
@@ -768,6 +895,22 @@ export default async function DynamicPage(props: PageProps) {
             }
           }
         },
+        {
+          sectionName: "Testing",
+          client: "yes",
+          data: {
+            builddata: {
+              title: "StyleShop",
+            },
+            styles: {},
+            state: {
+              key: "",
+              type: "",
+              initValue: ""
+            }
+          },
+          sections:[]
+        },
       ],
       "login":[
         {
@@ -880,6 +1023,22 @@ export default async function DynamicPage(props: PageProps) {
             }
           }
         },
+        {
+          sectionName: "Testing",
+          client: "yes",
+          data: {
+            builddata: {
+              title: "StyleShop",
+            },
+            styles: {},
+            state: {
+              key: "",
+              type: "",
+              initValue: ""
+            }
+          },
+          sections:[]
+        },
       ],
       "orders": [
         {
@@ -976,6 +1135,45 @@ export default async function DynamicPage(props: PageProps) {
             }
           ]
         },
+        {
+        sectionName: "Testing",
+        client: "yes",
+        data: {
+          builddata: {
+            title: "StyleShop",
+          },
+          styles: {},
+          state: {
+            key: "",
+            type: "",
+            initValue: ""
+          }
+        },
+        sections:[
+          {
+            sectionName: "Routes",
+            client: "yes",
+            data: {
+              builddata: {
+                routes: [
+                  { name: "Home", location: "/" },
+                  { name: "Products", location: "/products" },
+                  { name: "Categories", location: "/categories" },
+                  { name: "Profile", location: "/profile", authRequired: true },
+                  { name: "My Orders", location: "/orders", authRequired: true }
+                ]
+              },
+              styles: {},
+              state: {
+                key: "",
+                type: "",
+                initValue: ""
+              }
+            },
+            sections: []
+          },
+        ]
+      },
       ],
     } as unknown as { [key: string]: ComponentData[] };
     const componentList = data[slugPath];

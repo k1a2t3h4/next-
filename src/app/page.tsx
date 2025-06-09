@@ -6,6 +6,7 @@ export default async function Home() {
   try {
     // const pagesData = await getPagesFromR2();
     const pagesData = [
+
       {
         sectionName: "Header",
         data: {
@@ -98,6 +99,45 @@ export default async function Home() {
             },
             sections: []
           }
+        ]
+      },
+      {
+        sectionName: "Testing",
+        client: "yes",
+        data: {
+          builddata: {
+            title: "StyleShop",
+          },
+          styles: {},
+          state: {
+            key: "",
+            type: "",
+            initValue: ""
+          }
+        },
+        sections:[
+          {
+            sectionName: "Routes",
+            client: "yes",
+            data: {
+              builddata: {
+                routes: [
+                  { name: "Home", location: "/" },
+                  { name: "Products", location: "/products" },
+                  { name: "Categories", location: "/categories" },
+                  { name: "Profile", location: "/profile", authRequired: true },
+                  { name: "My Orders", location: "/orders", authRequired: true }
+                ]
+              },
+              styles: {},
+              state: {
+                key: "",
+                type: "",
+                initValue: ""
+              }
+            },
+            sections: []
+          },
         ]
       },
       {
