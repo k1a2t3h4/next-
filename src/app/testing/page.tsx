@@ -1,5 +1,5 @@
 import Script from 'next/script';
-
+import React from 'react';
 const topics = {
     TRENDING: ['Top Deals', 'New Arrivals', 'Most Loved'],
     MAKEUP: ['Foundation', 'Lipstick', 'Blush'],
@@ -9,10 +9,11 @@ const topics = {
     'SHOP ALL': ['All Products', 'Gift Sets', 'Best Sellers'],
   };
   
+
   const Header = () => {
     return (
       <>
-        <header className="bg-white shadow-md fixed top-0 w-full z-50">
+        <header className="bg-white shadow-md  w-full ">
           <div className="flex justify-between items-center px-4 sm:px-8 py-3">
             {/* Mobile menu button */}
             <button id="menuBtn" className="sm:hidden">
@@ -20,7 +21,7 @@ const topics = {
             </button>
   
             <h1 className="text-xl font-bold">ShopBrand</h1>
-  
+        
             {/* Desktop Navigation */}
             <nav className="hidden sm:flex gap-6">
               {Object.keys(topics).map((topic) => (

@@ -63,6 +63,8 @@ export default function ClientComponent({ name, data, sections, index}: Props) {
             case '@mui/material':
               const Mui = require('@mui/material');
               return Mui;
+            case 'next/script':
+               return require('next/script')
             default:
               console.warn(`Unknown module requested: ${modName}`);
               return {};

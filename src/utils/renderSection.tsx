@@ -70,6 +70,7 @@ function evaluateComponent(code: string): React.ComponentType {
     if (mod === 'next/link') return require('next/link');
     if (mod === '../app/page') return require('../utils/renderSection');
     if (mod === '../utils/renderSection') return require('../utils/renderSection');
+    if (mod === 'next/script') return require('next/script')
     throw new Error(`Cannot resolve module: ${mod}`);
   };
   const func = new Function('require', 'exports', 'module', code);
@@ -101,7 +102,7 @@ export async function renderSection(section: Section, idx: string) {
       const rawCode = await getRawComponentFromR2(key);
 
       // Step 4: Evaluate the compiled code with proper require shim
-      const Component = evaluateComponent(rawCode);
+      const Component = evaluateComponent(rawCode)
 
       // Step 5: Create dynamic wrapper with SSR option
       const DynamicComponent = dynamic(
