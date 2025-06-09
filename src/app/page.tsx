@@ -6,7 +6,6 @@ export default async function Home() {
   try {
     // const pagesData = await getPagesFromR2();
     const pagesData = [
-
       {
         sectionName: "Header",
         data: {
@@ -100,21 +99,6 @@ export default async function Home() {
             sections: []
           }
         ]
-      },
-      {
-        sectionName: "Testing",
-        data: {
-          builddata: {
-            title: "StyleShop",
-          },
-          styles: {},
-          state: {
-            key: "",
-            type: "",
-            initValue: ""
-          }
-        },
-        sections:[]
       },
       {
         sectionName: "FeaturedProducts",
