@@ -1,3 +1,5 @@
+import Script from 'next/script';
+
 const topics = {
     TRENDING: ['Top Deals', 'New Arrivals', 'Most Loved'],
     MAKEUP: ['Foundation', 'Lipstick', 'Blush'],
@@ -94,72 +96,66 @@ const topics = {
             className="fixed inset-0 bg-black bg-opacity-40 z-40 hidden sm:hidden"
           ></div>
         </header>
-  
-        {/* Pure JS Interactivity */}
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `
-            document.addEventListener('DOMContentLoaded', function () {
-              // Mobile menu functionality
-              const sidebar = document.getElementById('mobileSidebar');
-              const overlay = document.getElementById('overlay');
-              const menuBtn = document.getElementById('menuBtn');
-              const closeBtn = document.getElementById('closeBtn');
-              const backBtn = document.getElementById('backBtn');
-              const menuTitle = document.getElementById('menuTitle');
-              const topicList = document.getElementById('topicList');
-              const subLists = document.querySelectorAll('[data-sublist]');
+        <Script id="header-behavior" strategy="afterInteractive">
+          {`
+            // Mobile menu functionality
+            const sidebar = document.getElementById('mobileSidebar');
+            const overlay = document.getElementById('overlay');
+            const menuBtn = document.getElementById('menuBtn');
+            const closeBtn = document.getElementById('closeBtn');
+            const backBtn = document.getElementById('backBtn');
+            const menuTitle = document.getElementById('menuTitle');
+            const topicList = document.getElementById('topicList');
+            const subLists = document.querySelectorAll('[data-sublist]');
 
-              // Desktop dropdown functionality
-              const topicItems = document.querySelectorAll('.group');
-              topicItems.forEach((item) => {
-                const dropdown = item.querySelector('div');
-                
-                item.addEventListener('mouseenter', () => {
-                  dropdown?.classList.remove('hidden');
-                });
-                
-                item.addEventListener('mouseleave', () => {
-                  dropdown?.classList.add('hidden');
-                });
+            // Desktop dropdown functionality
+            const topicItems = document.querySelectorAll('.group');
+            topicItems.forEach((item) => {
+              const dropdown = item.querySelector('div');
+              
+              item.addEventListener('mouseenter', () => {
+                dropdown?.classList.remove('hidden');
               });
-
-              menuBtn.addEventListener('click', () => {
-                sidebar.classList.remove('-translate-x-full');
-                overlay.classList.remove('hidden');
+              
+              item.addEventListener('mouseleave', () => {
+                dropdown?.classList.add('hidden');
               });
-
-              closeBtn.addEventListener('click', closeMenu);
-              overlay.addEventListener('click', closeMenu);
-
-              function closeMenu() {
-                sidebar.classList.add('-translate-x-full');
-                overlay.classList.add('hidden');
-                showTopics();
-              }
-
-              function showTopics() {
-                topicList.classList.remove('hidden');
-                backBtn.classList.add('hidden');
-                menuTitle.textContent = 'Menu';
-                subLists.forEach((el) => el.classList.add('hidden'));
-              }
-
-              document.querySelectorAll('[data-topic]').forEach((el) => {
-                el.addEventListener('click', () => {
-                  const topic = el.getAttribute('data-topic');
-                  topicList.classList.add('hidden');
-                  backBtn.classList.remove('hidden');
-                  menuTitle.textContent = topic;
-                  document.getElementById('sub-' + topic).classList.remove('hidden');
-                });
-              });
-
-              backBtn.addEventListener('click', showTopics);
             });
-          `,
-          }}
-        />
+
+            menuBtn.addEventListener('click', () => {
+              sidebar.classList.remove('-translate-x-full');
+              overlay.classList.remove('hidden');
+            });
+
+            closeBtn.addEventListener('click', closeMenu);
+            overlay.addEventListener('click', closeMenu);
+
+            function closeMenu() {
+              sidebar.classList.add('-translate-x-full');
+              overlay.classList.add('hidden');
+              showTopics();
+            }
+
+            function showTopics() {
+              topicList.classList.remove('hidden');
+              backBtn.classList.add('hidden');
+              menuTitle.textContent = 'Menu';
+              subLists.forEach((el) => el.classList.add('hidden'));
+            }
+
+            document.querySelectorAll('[data-topic]').forEach((el) => {
+              el.addEventListener('click', () => {
+                const topic = el.getAttribute('data-topic');
+                topicList.classList.add('hidden');
+                backBtn.classList.remove('hidden');
+                menuTitle.textContent = topic;
+                document.getElementById('sub-' + topic).classList.remove('hidden');
+              });
+            });
+
+            backBtn.addEventListener('click', showTopics);
+          `}
+        </Script>
       </>
     );
   };
