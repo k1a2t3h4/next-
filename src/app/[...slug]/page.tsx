@@ -86,7 +86,7 @@ export default async function DynamicPage(props: PageProps) {
             },
             {
               sectionName: "Routes",
-              
+              client: "yes",
               data: {
                 builddata: {
                   routes: [
@@ -182,7 +182,7 @@ export default async function DynamicPage(props: PageProps) {
             },
             {
               sectionName: "Routes",
-             
+              client: "yes",
               data: {
                 builddata: {
                   routes: [
@@ -278,7 +278,7 @@ export default async function DynamicPage(props: PageProps) {
             },
             {
               sectionName: "Routes",
-             
+              client: "yes",
               data: {
                 builddata: {
                   routes: [
@@ -374,7 +374,7 @@ export default async function DynamicPage(props: PageProps) {
             },
             {
               sectionName: "Routes",
-              
+              client: "yes",
               data: {
                 builddata: {
                   routes: [
@@ -454,10 +454,23 @@ export default async function DynamicPage(props: PageProps) {
             }
           },
           sections: [
-            
+            {
+              sectionName: "Menu",
+              client: "yes",
+              data: {
+                builddata: {},
+                styles: {},
+                state: {
+                  key: "menuOpen",
+                  type: "boolean",
+                  initValue: false
+                }
+              },
+              sections: []
+            },
             {
               sectionName: "Routes",
-              
+              client: "yes",
               data: {
                 builddata: {
                   routes: [
@@ -477,7 +490,48 @@ export default async function DynamicPage(props: PageProps) {
               },
               sections: []
             },
-            
+            {
+              sectionName: "Search",
+              client: "yes",
+              data: {
+                builddata: {},
+                styles: {},
+                state: {
+                  key: "searchQuery",
+                  type: "string",
+                  initValue: ""
+                }
+              },
+              sections: []
+            },
+            {
+              sectionName: "Cart",
+              client: "yes",
+              data: {
+                builddata: {},
+                styles: {},
+                state: {
+                  key: "",
+                  type: "",
+                  initValue: ""
+                }
+              },
+              sections: []
+            },
+            {
+              sectionName: "Auth",
+              client: "yes",
+              data: {
+                builddata: {},
+                styles: {},
+                state: {
+                  key: "",
+                  type: "",
+                  initValue: ""
+                }
+              },
+              sections: []
+            }
           ]
         }
       ],
@@ -512,7 +566,7 @@ export default async function DynamicPage(props: PageProps) {
             },
             {
               sectionName: "Routes",
-             
+              client: "yes",
               data: {
                 builddata: {
                   routes: [
@@ -608,7 +662,7 @@ export default async function DynamicPage(props: PageProps) {
             },
             {
               sectionName: "Routes",
-              
+              client: "yes",
               data: {
                 builddata: {
                   routes: [
@@ -746,7 +800,7 @@ export default async function DynamicPage(props: PageProps) {
             },
             {
               sectionName: "Routes",
-              
+              client: "yes",
               data: {
                 builddata: {
                   routes: [
@@ -842,10 +896,23 @@ export default async function DynamicPage(props: PageProps) {
             }
           },
           sections: [
-            
+            {
+              sectionName: "Menu",
+              client: "yes",
+              data: {
+                builddata: {},
+                styles: {},
+                state: {
+                  key: "menuOpen",
+                  type: "boolean",
+                  initValue: false
+                }
+              },
+              sections: []
+            },
             {
               sectionName: "Routes",
-            
+              client: "yes",
               data: {
                 builddata: {
                   routes: [
@@ -865,7 +932,48 @@ export default async function DynamicPage(props: PageProps) {
               },
               sections: []
             },
-            
+            {
+              sectionName: "Search",
+              client: "yes",
+              data: {
+                builddata: {},
+                styles: {},
+                state: {
+                  key: "searchQuery",
+                  type: "string",
+                  initValue: ""
+                }
+              },
+              sections: []
+            },
+            {
+              sectionName: "Cart",
+              client: "yes",
+              data: {
+                builddata: {},
+                styles: {},
+                state: {
+                  key: "",
+                  type: "",
+                  initValue: ""
+                }
+              },
+              sections: []
+            },
+            {
+              sectionName: "Auth",
+              client: "yes",
+              data: {
+                builddata: {},
+                styles: {},
+                state: {
+                  key: "",
+                  type: "",
+                  initValue: ""
+                }
+              },
+              sections: []
+            }
           ]
         },
       ],

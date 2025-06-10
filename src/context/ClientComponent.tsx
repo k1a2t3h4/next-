@@ -38,6 +38,8 @@ export default function ClientComponent({ name, data, sections, index}: Props) {
           switch (modName) {
             case 'react':
               return require('react');
+            case 'next/link':
+               return require('next/link');
             case '../app/CartWrapper':
               return require('../app/CartWrapper');
             case '../app/AuthWrapper':

@@ -20,9 +20,84 @@ export default async function Home() {
           }
         },
         sections: [
-          
-         
-          
+          {
+            sectionName: "Menu",
+            client: "yes",
+            data: {
+              builddata: {},
+              styles: {},
+              state: {
+                key: "menuOpen",
+                type: "boolean",
+                initValue: false
+              }
+            },
+            sections: []
+          },
+          {
+            sectionName: "Routes",
+            client: "yes",
+            data: {
+              builddata: {
+                routes: [
+                  { name: "Home", location: "/" },
+                  { name: "Products", location: "/products" },
+                  { name: "Categories", location: "/categories" },
+                  { name: "Profile", location: "/profile", authRequired: true },
+                  { name: "My Orders", location: "/orders", authRequired: true }
+                ]
+              },
+              styles: {},
+              state: {
+                key: "",
+                type: "",
+                initValue: ""
+              }
+            },
+            sections: []
+          },
+          {
+            sectionName: "Search",
+            client: "yes",
+            data: {
+              builddata: {},
+              styles: {},
+              state: {
+                key: "searchQuery",
+                type: "string",
+                initValue: ""
+              }
+            },
+            sections: []
+          },
+          {
+            sectionName: "Cart",
+            client: "yes",
+            data: {
+              builddata: {},
+              styles: {},
+              state: {
+                key: "",
+                type: "",
+                initValue: ""
+              }
+            },
+            sections: []
+          },
+          {
+            sectionName: "Auth",
+            client: "yes",
+            data: {
+              builddata: {},
+              styles: {},
+              state: {
+                key: "",
+                type: "",
+                initValue: ""
+              }
+            },
+            sections: []
+          }
         ]
       },
       {
