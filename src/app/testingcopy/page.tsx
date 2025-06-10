@@ -1,3 +1,4 @@
+
 import React from 'react';
 import {Menu, X } from 'lucide-react';
 import Link from 'next/link';
@@ -27,7 +28,7 @@ const Header = () => {
         </button>
 
         <h1 className="text-xl font-bold">ShopBrand</h1>
-        <Link href="/testingcopy">testing copy</Link>
+        <Link href="/testing">testing</Link>
 
         {/* Desktop Nav */}
         <nav className="hidden sm:flex gap-6">
