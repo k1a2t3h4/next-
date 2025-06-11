@@ -81,7 +81,6 @@ function evaluateComponent(code: string): React.ComponentType {
 
 export async function renderSection(section: Section, idx: string) {
   try {
-
     // Step 2: Check if it's a client component based on the client property
     if (section.client === "yes") {
       return (
@@ -112,8 +111,7 @@ export async function renderSection(section: Section, idx: string) {
           sections?: Section[],
         }) => <Component data={data} sections={sections}/>),
         { ssr: true }
-      );
-
+      ); 
       return (
         <div key={idx} className="section-container" suppressHydrationWarning>
           <DynamicComponent

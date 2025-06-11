@@ -51,7 +51,7 @@ export async function POST(request: Request) {
         ContentType: 'application/javascript',
       })
     );
-
+ 
     // Generate presigned URLs for both files
     const tsxPresignedUrl = await getSignedUrl(
       r2Client,
