@@ -99,7 +99,7 @@ export default function ClientComponent({ name, data, sections, index}: Props) {
   }
 
   if (!Component) {
-    return <div suppressHydrationWarning>Loading {name}...</div>;
+    return <div suppressHydrationWarning></div>;
   }
 
   return (
