@@ -1155,7 +1155,7 @@ export default async function DynamicPage(props: PageProps) {
 // ✅ Static paths to generate at build time
 export async function generateStaticParams() {
   const staticPaths = [
-    "", // homepage `/`
+    "/", // homepage `/`
     "products",
     "categories",
     "profile",
