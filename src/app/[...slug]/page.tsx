@@ -29,7 +29,7 @@ interface ComponentData {
 }
 
 // ✅ Enable ISR for this route:
-export const revalidate = 1000;
+export const revalidate = 10000000000000000000;
 
 export default async function DynamicPage(props: PageProps) {
   const { params } = props;

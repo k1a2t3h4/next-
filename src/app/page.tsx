@@ -181,77 +181,7 @@ export default async function Home() {
             ]
           }
         ]
-      },
-      {
-        "sectionName": "FeaturedProducts2",
-        "data": {
-          "builddata": {
-            "title": "Featured Products",
-            "subtitle": "Our Most Popular Items",
-            "showCount": 4,
-            "sortBy": "featured"
-          },
-          "styles": {},
-          "state": {
-            "key": "",
-            "type": "",
-            "initValue": ""
-          }
-        },
-        "sections": [
-          {
-            "sectionName": "ProductList2",
-            client: "yes",
-            "data": {
-              "builddata": {
-                "products": [
-                  {
-                    "id": "1",
-                    "name": "Classic White T-Shirt",
-                    "description": "A comfortable white t-shirt made from 100% cotton.",
-                    "price": 19.99,
-                    "imageUrl": "https://images.unsplash.com/photo-1581655353564-df123a1eb820?q=80&w=600",
-                    "inventory": 50
-                  },
-                  {
-                    "id": "2",
-                    "name": "Slim Fit Jeans",
-                    "description": "Modern slim fit jeans perfect for any casual occasion.",
-                    "price": 49.99,
-                    "imageUrl": "https://images.unsplash.com/photo-1542272604-787c3835535d?q=80&w=600",
-                    "inventory": 30
-                  },
-                  {
-                    "id": "3",
-                    "name": "Sports Running Shoes",
-                    "description": "Lightweight running shoes with excellent cushioning.",
-                    "price": 79.99,
-                    "imageUrl": "https://images.unsplash.com/photo-1542291026-7eec264c27ff?q=80&w=600",
-                    "inventory": 25
-                  },
-                  {
-                    "id": "4",
-                    "name": "Summer Floral Dress",
-                    "description": "Beautiful floral pattern dress perfect for summer days.",
-                    "price": 59.99,
-                    "imageUrl": "https://images.unsplash.com/photo-1612722432474-b971cdcea26d?q=80&w=600",
-                    "inventory": 15
-                  }
-                ]
-              },
-              "styles": {},
-              "state": {
-                "key": "",
-                "type": "",
-                "initValue": ""
-              }
-            },
-            "sections": [
-              
-            ]
-          }
-        ]
-      },
+      }
     ];
     return (
       <main className="min-h-screen" suppressHydrationWarning>
@@ -264,4 +194,4 @@ export default async function Home() {
   }
 }
 
-export const revalidate = 1000;
+export const revalidate = 1000000000000000000;
