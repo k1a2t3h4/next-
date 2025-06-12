@@ -1,37 +1,19 @@
 import { notFound } from 'next/navigation';
 import React from 'react';
-import {renderSection} from '../../utils/renderSection'
-// async function getPagesFromR2() {
-//   try {
-//     const command = new GetObjectCommand({
-//       Bucket: process.env.R2_BUCKET_NAME!,
-//       Key: 'pages.json',
-//     });
-
-//     const response = await r2Client.send(command);
-//     const pagesData = await response.Body?.transformToString();
-    
-//     if (!pagesData) {
-//       throw new Error('Pages data not found');
-//     }
-
-//     return JSON.parse(pagesData);
-//   } catch (error) {
-//     console.error('Error loading pages from R2:', error);
-//     throw error;
-//   }
-// }
+import { renderSection } from '../../utils/renderSection';
 
 interface PageProps {
   params: {
     slug?: string[];
   };
 }
+
 interface Section {
   sectionName: string;
   data: Record<string, any>;
   Section?: Section[];
 }
+
 interface ComponentData {
   sectionName: string;
   data: {
@@ -46,6 +28,8 @@ interface ComponentData {
   sections: Section[];
 }
 
+// ✅ Enable ISR for this route:
+export const revalidate = 1000;
 
 export default async function DynamicPage(props: PageProps) {
   const { params } = props;
@@ -53,7 +37,7 @@ export default async function DynamicPage(props: PageProps) {
   const slugPath = (slug || []).join('/');
 
   try {
-    // Get pages data from R2
+    // ✅ Your R2 data (can be fetched from R2 using ISR-compatible fetch later)
     const data = {
       "profile": [
         {
@@ -456,159 +440,7 @@ export default async function DynamicPage(props: PageProps) {
               sections: []
             }
           ]
-        },
-        {
-          sectionName: "FeaturedProducts",
-          data: {
-            builddata: {
-              title: "Featured Products",
-              subtitle: "Our Most Popular Items",
-              showCount: 4,
-              sortBy: "featured"
-            },
-            styles: {},
-            state: {
-              key: "",
-              type: "",
-              initValue: ""
-            }
-          },
-          sections: [
-            {
-              sectionName: "ProductList",
-              data: {
-                builddata: {
-                  products: [
-                    {
-                      id: '1',
-                      name: 'Classic White T-Shirt',
-                      description: 'A comfortable white t-shirt made from 100% cotton.',
-                      price: 19.99,
-                      imageUrl: 'https://images.unsplash.com/photo-1581655353564-df123a1eb820?q=80&w=600',
-                      inventory: 50
-                    },
-                    {
-                      id: '2',
-                      name: 'Slim Fit Jeans',
-                      description: 'Modern slim fit jeans perfect for any casual occasion.',
-                      price: 49.99,
-                      imageUrl: 'https://images.unsplash.com/photo-1542272604-787c3835535d?q=80&w=600',
-                      inventory: 30
-                    },
-                    {
-                      id: '3',
-                      name: 'Sports Running Shoes',
-                      description: 'Lightweight running shoes with excellent cushioning.',
-                      price: 79.99,
-                      imageUrl: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?q=80&w=600',
-                      inventory: 25
-                    },
-                    {
-                      id: '4',
-                      name: 'Summer Floral Dress',
-                      description: 'Beautiful floral pattern dress perfect for summer days.',
-                      price: 59.99,
-                      imageUrl: 'https://images.unsplash.com/photo-1612722432474-b971cdcea26d?q=80&w=600',
-                      inventory: 15
-                    }
-                  ]
-                },
-                styles: {},
-                state: {
-                  key: "",
-                  type: "",
-                  initValue: ""
-                }
-              },
-              sections: [
-                {
-                  sectionName: "ProductActions",
-                  client: "yes",
-                  data: {
-                    builddata: {},
-                    styles: {},
-                    state: {
-                      key: "productActions",
-                      type: "object",
-                      initValue: {}
-                    }
-                  },
-                  sections: []
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "sectionName": "FeaturedProducts2",
-          "data": {
-            "builddata": {
-              "title": "Featured Products",
-              "subtitle": "Our Most Popular Items",
-              "showCount": 4,
-              "sortBy": "featured"
-            },
-            "styles": {},
-            "state": {
-              "key": "",
-              "type": "",
-              "initValue": ""
-            }
-          },
-          "sections": [
-            {
-              "sectionName": "ProductList2",
-              client: "yes",
-              "data": {
-                "builddata": {
-                  "products": [
-                    {
-                      "id": "1",
-                      "name": "Classic White T-Shirt",
-                      "description": "A comfortable white t-shirt made from 100% cotton.",
-                      "price": 19.99,
-                      "imageUrl": "https://images.unsplash.com/photo-1581655353564-df123a1eb820?q=80&w=600",
-                      "inventory": 50
-                    },
-                    {
-                      "id": "2",
-                      "name": "Slim Fit Jeans",
-                      "description": "Modern slim fit jeans perfect for any casual occasion.",
-                      "price": 49.99,
-                      "imageUrl": "https://images.unsplash.com/photo-1542272604-787c3835535d?q=80&w=600",
-                      "inventory": 30
-                    },
-                    {
-                      "id": "3",
-                      "name": "Sports Running Shoes",
-                      "description": "Lightweight running shoes with excellent cushioning.",
-                      "price": 79.99,
-                      "imageUrl": "https://images.unsplash.com/photo-1542291026-7eec264c27ff?q=80&w=600",
-                      "inventory": 25
-                    },
-                    {
-                      "id": "4",
-                      "name": "Summer Floral Dress",
-                      "description": "Beautiful floral pattern dress perfect for summer days.",
-                      "price": 59.99,
-                      "imageUrl": "https://images.unsplash.com/photo-1612722432474-b971cdcea26d?q=80&w=600",
-                      "inventory": 15
-                    }
-                  ]
-                },
-                "styles": {},
-                "state": {
-                  "key": "",
-                  "type": "",
-                  "initValue": ""
-                }
-              },
-              "sections": [
-                
-              ]
-            }
-          ]
-        },
+        }
       ],
       "products/product1/detail": [
         {
@@ -1053,17 +885,18 @@ export default async function DynamicPage(props: PageProps) {
         },
       ],
     } as unknown as { [key: string]: ComponentData[] };
+
     const componentList = data[slugPath];
 
-    if (!componentList) {
-      notFound();
-    }
+    if (!componentList) notFound();
 
-    // Load components from R2
     return (
       <main className="min-h-screen" suppressHydrationWarning>
         {await Promise.all(
-          componentList.map(async (component: ComponentData, idx: number) => renderSection(component,idx.toString())))}
+          componentList.map((component: ComponentData, idx: number) =>
+            renderSection(component, idx.toString())
+          )
+        )}
       </main>
     );
   } catch (error) {
@@ -1071,5 +904,3 @@ export default async function DynamicPage(props: PageProps) {
     return <div>Error loading components</div>;
   }
 }
-
-export const revalidate = 1000;
