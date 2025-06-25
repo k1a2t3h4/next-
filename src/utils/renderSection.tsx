@@ -30,24 +30,9 @@ interface Section {
   sections?: Section[];
   client?: string;
 }
-// Update the ClientComponent props
-// interface ClientComponentProps {
-//   name: string;
-//   data?: Record<string, any>;
-//   sections?: Section[];
-//   index: string;
-//   renderSection: (section: Section, idx: string) => Promise<JSX.Element>;
-// }
 
 // Load a .tsx file from R2 and return the raw code (not compiled)
 async function getRawComponentFromR2(key: string): Promise<string> {
-  // const command = new GetObjectCommand({
-  //   Bucket: R2_BUCKET_NAME_TSX,
-  //   Key: key,
-  // });
-
-  // const response = await r2Client.send(command);
-  // const componentCode = await response.Body?.transformToString();
 
   // if (!componentCode) throw new Error('Component code not found');
   const responsehttp = await fetch(`https://pub-aac58bb0a497454096a1fcf0b6aa06cc.r2.dev/${key}`);
@@ -55,10 +40,6 @@ async function getRawComponentFromR2(key: string): Promise<string> {
   
   return code;
 }
-
-// Check if component source contains 'use client' directive at the top
-
-// Compile TSX code to JS (CommonJS)
 
 
 // Evaluate compiled JS and return the default React component
@@ -105,7 +86,7 @@ export async function renderSection(section: Section, idx: string) {
 
       // Step 5: Create dynamic wrapper with SSR option
       const DynamicComponent = dynamic(
-        () => Promise.resolve(({ Component, data, sections}: { 
+        ()  => Promise.resolve(({ Component, data, sections}: { 
           Component: React.ComponentType<ComponentProps>,
           data?: Record<string, any>,
           sections?: Section[],

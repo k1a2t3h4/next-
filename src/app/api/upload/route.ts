@@ -1,6 +1,6 @@
 import * as esbuild from 'esbuild';
 import { NextResponse } from 'next/server';
-import { r2Client } from '@/lib/r2';
+import { r2Client } from '../../../lib/r2';
 import { PutObjectCommand, GetObjectCommand } from '@aws-sdk/client-s3';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 

@@ -183,6 +183,7 @@ export default async function Home() {
         ]
       }
     ];
+
     return (
       <main className="min-h-screen" suppressHydrationWarning>
         {await Promise.all(pagesData.map((section, idx) => renderSection(section, idx.toString())))}
@@ -194,4 +195,4 @@ export default async function Home() {
   }
 }
 
-export const revalidate = 1000000000000000000;
+export const revalidate = 1000;
